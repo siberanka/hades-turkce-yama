@@ -86,6 +86,8 @@ def validate(catalog, rows, reviews=None):
             errors.append(f'{where}: control character')
         if any(x in target for x in ['\ufffd', '\u200b', '\ufeff']):
             errors.append(f'{where}: invalid or hidden character')
+        if re.search(r'(?<=\w)\?(?=\w)', target):
+            errors.append(f'{where}: question mark inside a word; possible encoding damage')
         if target != unicodedata.normalize('NFC', target):
             errors.append(f'{where}: non-NFC Unicode')
         if target == entry['source']:

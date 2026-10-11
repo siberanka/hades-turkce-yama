@@ -99,6 +99,13 @@ class CatalogTests(unittest.TestCase):
                'source_sha256': entry['source_sha256'], 'stage': 'draft'}
         self.assertEqual(validate([entry], [row])['warnings'], [])
 
+    def test_ascii_replacement_damage_is_rejected_but_questions_are_allowed(self):
+        entry = {'key': 'x', 'source': 'Cast?', 'source_sha256': digest(b'Cast?'), 'scope': 'game'}
+        row = {'key': 'x', 'target': 'Büyü? Evet.', 'source_sha256': entry['source_sha256'], 'stage': 'draft'}
+        self.assertEqual(validate([entry], [row])['errors'], [])
+        row['target'] = 'B?y?'
+        self.assertTrue(any('encoding damage' in e for e in validate([entry], [row])['errors']))
+
 
 if __name__ == '__main__':
     unittest.main()
