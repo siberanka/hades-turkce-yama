@@ -13,6 +13,7 @@ from catalog import ROOT, WORK, digest, write_json
 MARKERS = re.compile(r'\{[^{}]*\}|@[A-Za-z][A-Za-z0-9_\\/]*|%(?:\d+\$)?[sdif]|\\(?:Column\s+\d+|\[|\])')
 STAGES = {'draft', 'edited', 'context-reviewed', 'in-game-verified'}
 TOOLTIP_STYLE_TOKENS = re.compile(r'\{#[^{}]+\}|\{\$TooltipData\.[^{}]+\}')
+KEYWORDS = re.compile(r'\{\$Keywords\.([^{}]+)\}')
 
 
 def tooltip_style_scopes(text):
@@ -26,6 +27,24 @@ def tooltip_style_scopes(text):
         else:
             values.append((token, style))
     return Counter(values)
+
+
+def keyword_review_hashes(text, definitions):
+    """Track rendered term dependencies, including nested keyword labels."""
+    result = {}
+
+    def visit(name):
+        if name in result:
+            return
+        target = definitions.get(name)
+        result[name] = digest(target.encode('utf-8')) if isinstance(target, str) else None
+        if isinstance(target, str):
+            for dependency in KEYWORDS.findall(target):
+                visit(dependency)
+
+    for name in KEYWORDS.findall(text):
+        visit(name)
+    return result
 
 
 def load_rows(folder: Path):
@@ -46,6 +65,9 @@ def load_reviews():
 
 def validate(catalog, rows, reviews=None):
     entries = {e['key']: e for e in catalog}
+    targets = {r.get('key'): r.get('target') for r in rows}
+    definitions = {e['id'].split('::')[0]: targets.get(e['key']) for e in catalog
+                   if e.get('file', '').endswith('HelpText.en.sjson') and '::DisplayName::' in e.get('id', '')}
     errors, warnings = [], []
     seen = set()
     for row in rows:
@@ -72,6 +94,10 @@ def validate(catalog, rows, reviews=None):
                 errors.append(f'{where}: missing or stale contextual review')
             if not review.get('references') or not all(review.get(check) for check in ('meaning', 'voice', 'scene', 'formatting')):
                 errors.append(f'{where}: contextual review lacks evidence or required checks')
+            dependencies = keyword_review_hashes(target, definitions)
+            if dependencies and (any(value is None for value in dependencies.values()) or
+                                 review.get('keyword_sha256') != dependencies):
+                errors.append(f'{where}: missing or stale rendered keyword review')
             if row.get('stage') == 'in-game-verified' and not review.get('in_game_evidence'):
                 errors.append(f'{where}: in-game verification requires recorded evidence')
         if entry['scope'] != 'game':

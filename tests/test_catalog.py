@@ -106,6 +106,23 @@ class CatalogTests(unittest.TestCase):
         row['target'] = 'B?y?'
         self.assertTrue(any('encoding damage' in e for e in validate([entry], [row])['errors']))
 
+    def test_keyword_change_invalidates_review_of_unchanged_sentence(self):
+        sentence = {'key': 'sentence', 'source': 'Your {$Keywords.Cast} is stronger.',
+                    'source_sha256': 'sentence-hash', 'scope': 'game'}
+        term = {'key': 'term', 'file': 'Text/HelpText.en.sjson', 'id': 'Cast::DisplayName::1',
+                'source': 'Cast', 'source_sha256': 'term-hash', 'scope': 'game'}
+        row = {'key': 'sentence', 'source_sha256': 'sentence-hash',
+               'target': '{$Keywords.Cast} güçlenir.', 'stage': 'context-reviewed'}
+        term_row = {'key': 'term', 'source_sha256': 'term-hash', 'target': 'Büyü', 'stage': 'draft'}
+        review = {'sentence': {'source_sha256': 'sentence-hash', 'target_sha256': digest(row['target'].encode()),
+                              'references': ['synthetic weapon'], 'meaning': 'stronger', 'voice': 'UI',
+                              'scene': 'weapon tooltip', 'formatting': 'keyword',
+                              'keyword_sha256': {'Cast': digest('Büyü'.encode())}}}
+        self.assertEqual(validate([sentence, term], [row, term_row], review)['errors'], [])
+        term_row['target'] = 'Atış'
+        report = validate([sentence, term], [row, term_row], review)
+        self.assertTrue(any('keyword review' in error for error in report['errors']))
+
 
 if __name__ == '__main__':
     unittest.main()
