@@ -16,6 +16,8 @@ Supergiant's [website terms](https://www.supergiantgames.com/blog/terms-of-use/)
 
 The tools use the Python standard library and Windows .NET Framework; those runtimes are not bundled. A local preview can optionally contain official screenshots. Such a build is marked LOCAL-ONLY and is not cleared for redistribution. No game soundtrack is bundled; the user may select a local audio file.
 
+The [Hyper Delivery modpack](https://github.com/cgullsHadesMods/hades-HyperDeliveryModpack/blob/main/LICENSE) uses MIT for its contributors' software. Our original software follows that licensing model; no code or assets have been copied from that project. Its license does not grant rights to Supergiant's material. The community's [Hades II modding guide](https://sgg-modding.github.io/Hades2ModWiki/docs/creating-mods/first-mod-guide/mod-template) also reports a Supergiant policy restricting use of its intellectual property for generative AI training or grounding. That report is relevant to distribution review and must not be presented as approval of an AI-assisted translation. Our code license and attribution do not override rights-holder policies.
+
 ## Türkçe
 
 Bu çalışma, Türkçe konuşan oyunculara ve hayran topluluğuna katkı sağlamak amacıyla hazırlanan **kâr amacı gütmeyen, yapay zekâ destekli bir hayran projesidir**. Çeviri taslakları ve yardımcı araçlar yapay zekâ desteğiyle hazırlanabilir; bağlam, dil ve oyun içi kontroller gerektirir. Bağımsız bir profesyonel ekip onayı veya oyun geliştiricisinin desteği iddia edilmez.
@@ -37,3 +39,5 @@ Mevcut topluluk modlarının bulunması bu proje için izin yerine geçmez. Çev
 Kaynak araçları Python standart kütüphanesini ve Windows .NET Framework bileşenlerini kullanır; bu çalışma ortamları veya oyun varlıkları kurulum paketinin içine eklenmez. Proje, Supergiant Games ile bağlantılı değildir ve resmî destek iddiası taşımaz.
 
 Yerel görsel önizleme resmî ekran görüntüleri içerebilir; böyle bir derleme LOCAL-ONLY olarak işaretlenir ve yeniden dağıtım izni doğrulanmış değildir. Hades müziği pakete gömülmez; kullanıcı kendi yerel ses dosyasını seçebilir.
+
+[Hyper Delivery mod paketi](https://github.com/cgullsHadesMods/hades-HyperDeliveryModpack/blob/main/LICENSE), katkı sahiplerinin yazılımı için MIT kullanır. Özgün araçlarımız aynı lisans modelini izler; bu projeden kod veya varlık kopyalanmamıştır. Bu lisans, Supergiant'ın içeriğine ilişkin hakları kapsamaz. Topluluğun [Hades II mod rehberi](https://sgg-modding.github.io/Hades2ModWiki/docs/creating-mods/first-mod-guide/mod-template), Supergiant'ın fikrî mülkiyetinin üretken yapay zekâ eğitimi veya bağlama dayandırma amacıyla kullanımını kısıtlayan bir politika da aktarıyor. Bu aktarım dağıtım değerlendirmesinde dikkate alınır; yapay zekâ destekli çeviriye onay gibi sunulmaz. Kod lisansı ve atıf, hak sahibinin politikasını geçersiz kılmaz.
