@@ -6,6 +6,7 @@ from pathlib import Path
 
 from catalog import WORK, csv_strings, sjson_strings, digest, write_json
 from validate import load_rows
+from font_patch import FONT_PATH, verify_compatibility
 
 
 def main():
@@ -31,6 +32,9 @@ def main():
         result.extend(original[cursor:])
         if digest(result) != f['after']:
             raise ValueError('Output hash mismatch')
+        if f['path'] == FONT_PATH:
+            verify_compatibility(original, bytes(result))
+            continue
         def parse(data):
             text = data.decode('utf-8-sig')
             rows = csv_strings(text) if f['path'].endswith('.csv') else sjson_strings(text, lua=f['path'].endswith('.lua'))

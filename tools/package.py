@@ -7,9 +7,10 @@ from collections import defaultdict
 
 from catalog import WORK, digest, encode, write_json
 from validate import load_rows, load_reviews, validate
+from font_patch import FONT_PATH, ALIASES, compatibility_patch
 
 
-def build(catalog, manifest, rows, version, preview=False, reviews=None):
+def build(catalog, manifest, rows, version, preview=False, reviews=None, font_compatibility=None):
     report = validate(catalog, rows, reviews)
     if report['errors']:
         raise ValueError('\n'.join(report['errors']))
@@ -42,8 +43,18 @@ def build(catalog, manifest, rows, version, preview=False, reviews=None):
                           'replacement': base64.b64encode(replacement).decode('ascii')})
         result.extend(data[cursor:])
         files.append({'path': path, 'before': digest(data), 'after': digest(result), 'edits': edits})
+    if font_compatibility is not None:
+        if font_compatibility.get('schema') != 1 or font_compatibility.get('path') != FONT_PATH or font_compatibility.get('aliases') != ALIASES:
+            raise ValueError('Invalid font compatibility record')
+        if not preview and font_compatibility.get('in_game_verified') is not True:
+            raise ValueError('Stable release requires in-game font layout verification')
+        original = (WORK / 'cache/originals' / FONT_PATH).read_bytes()
+        if digest(original) != font_compatibility['sha256']:
+            raise ValueError('Font-map cache changed')
+        files.append(compatibility_patch(original))
     return {'schema': 1, 'version': version, 'preview': preview,
-            'translated': report['translated'], 'total': report['total'], 'files': files}
+            'translated': report['translated'], 'total': report['total'], 'files': files,
+            'requirements': font_compatibility['fonts'] if font_compatibility else []}
 
 
 def main():
@@ -53,9 +64,13 @@ def main():
     p.add_argument('--preview', action='store_true')
     p.add_argument('--output', type=Path, default=WORK / 'build/payload.json')
     args = p.parse_args()
+    font_path = WORK / 'cache/font-compatibility.json'
+    if not font_path.exists():
+        raise ValueError('Prepare font compatibility with tools/font_patch.py GAME_PATH first')
+    fonts = json.loads(font_path.read_text(encoding='utf-8'))
     catalog = json.loads((WORK / 'cache/catalog.json').read_text(encoding='utf-8'))
     manifest = json.loads((WORK / 'cache/source-manifest.json').read_text(encoding='utf-8'))
-    payload = build(catalog, manifest, load_rows(args.drafts), args.version, args.preview, load_reviews())
+    payload = build(catalog, manifest, load_rows(args.drafts), args.version, args.preview, load_reviews(), fonts)
     if not payload['files']:
         raise ValueError('Refusing to build an empty translation installer')
     write_json(args.output, payload)

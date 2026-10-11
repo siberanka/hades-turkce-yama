@@ -2,6 +2,13 @@
 
 ## English
 
+### Source tools — 12 October 2026
+
+- Turkish glyph compatibility through aliases to existing game fonts, without redistributing font binaries.
+- Read-only font prerequisites, verified alias backups and exact restoration.
+- Rejection of modified fonts, duplicate aliases and unapproved font paths.
+- Font layout and the full translation remain subject to in-game review.
+
 ### 0.1.0 — Local preview, 11 October 2026
 
 - English-text inventory, lossless patch production and validation tools.
@@ -17,6 +24,13 @@
 The full translation, in-game language review, complete font compatibility and a basis for public translation distribution remain unfinished.
 
 ## Türkçe
+
+### Kaynak araçlar — 12 Ekim 2026
+
+- Font dosyası dağıtmadan, oyunun mevcut fontlarına yönlendirmeyle Türkçe karakter uyumluluğu.
+- Salt okunur font ön koşulları, doğrulanmış eşleme yedeği ve bire bir geri yükleme.
+- Değişmiş fontların, yinelenen eşlemelerin ve izin verilmemiş font yollarının reddedilmesi.
+- Font görünümü ve tam çeviri için oyun içi inceleme sürüyor.
 
 ## 0.1.0 — Yerel ön sürüm, 11 Ekim 2026
 

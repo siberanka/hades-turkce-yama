@@ -13,10 +13,12 @@ namespace HadesTurkce
 {
     public sealed class Edit { public int offset; public int length; public string replacement; }
     public sealed class PatchFile { public string path; public string before; public string after; public Edit[] edits; }
+    public sealed class RequiredFile { public string path; public string sha256; }
     public sealed class Payload
     {
         public int schema; public string version; public bool preview;
         public int translated; public int total; public PatchFile[] files;
+        public RequiredFile[] requirements;
     }
     public sealed class Receipt { public string state; public string version; public string uninstallerSha256; public PatchFile[] files; }
 
@@ -28,8 +30,13 @@ namespace HadesTurkce
         readonly string root;
         readonly Payload payload;
         static readonly JavaScriptSerializer Json = new JavaScriptSerializer { MaxJsonLength = 32 * 1024 * 1024 };
-        static readonly Regex Allowed = new Regex(@"^Content/(Game/Text/en/[A-Za-z0-9_.-]+\.sjson|Subtitles/en/[A-Za-z0-9_.-]+\.csv|Scripts/[A-Za-z0-9_.-]+\.lua)$");
+        static readonly Regex Allowed = new Regex(@"^Content/(Game/Text/en/[A-Za-z0-9_.-]+\.sjson|Subtitles/en/[A-Za-z0-9_.-]+\.csv|Scripts/[A-Za-z0-9_.-]+\.lua|Win/Fonts/en/Fonts\.remap)$");
         static readonly Regex HashPattern = new Regex("^[a-f0-9]{64}$");
+        static readonly string[] FontRequirements = {
+            "Content/Win/Fonts/en/AlegreyaSCBold.xnb",
+            "Content/Win/Fonts/en/AlegreyaSCBoldTracking.xnb",
+            "Content/Win/Fonts/en/UbuntuMonoBold.xnb"
+        };
 
         public Engine(string directory, Payload patch)
         {
@@ -42,6 +49,14 @@ namespace HadesTurkce
             if (patch == null || patch.schema != 1 || patch.files == null)
                 throw new IOException("Geçersiz yama paketi.");
             ValidateFiles(patch.files);
+            if (patch.requirements != null)
+            {
+                var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                foreach (var item in patch.requirements)
+                    if (item == null || !FontRequirements.Contains(item.path) || !seen.Add(item.path) ||
+                        item.sha256 == null || !HashPattern.IsMatch(item.sha256))
+                        throw new IOException("Font uyumluluk kayıtları geçersiz.");
+            }
         }
 
         public static Payload ReadPayload(string json) { return Json.Deserialize<Payload>(json); }
@@ -144,6 +159,12 @@ namespace HadesTurkce
         {
             ClosedGame();
             if (payload.files.Length == 0) return "Bu araç paketinde çeviri bulunmuyor. Kurulum yapılamaz.";
+            if (payload.files.Any(f => f.path == "Content/Win/Fonts/en/Fonts.remap") &&
+                (payload.requirements == null || payload.requirements.Length != FontRequirements.Length))
+                throw new IOException("Font uyumluluğu için kaynak font kayıtları eksik.");
+            foreach (var item in payload.requirements ?? new RequiredFile[0])
+                if (Hash(Read(Under(root, item.path))) != item.sha256)
+                    throw new IOException("Oyundaki font dosyası farklı; dosya korunuyor: " + item.path);
             foreach (var f in payload.files) Transform(Read(Under(root, f.path)), f);
             return String.Format("Dosyalar uyumlu. {0}/{1} metin kaydı; {2} dosya.\r\n{3}",
                 payload.translated, payload.total, payload.files.Length,

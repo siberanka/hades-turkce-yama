@@ -7,6 +7,7 @@ The tools were validated with Python 3.14 and the Windows .NET Framework C# comp
 ```powershell
 py -3.14 tools/catalog.py 'GAME_DIRECTORY'
 py -3.14 tools/context.py index 'GAME_DIRECTORY' --languages de fr
+py -3.14 tools/font_patch.py 'GAME_DIRECTORY'
 py -3.14 tools/validate.py
 py -3.14 tools/package.py --version 0.1.0-onizleme --preview
 py -3.14 tools/verify_payload.py
@@ -15,6 +16,8 @@ py -3.14 tools/verify_payload.py
 ```
 
 The inventory reads English SJSON, subtitle CSV and Lua dialogue tables without executing game scripts. CSV text columns are resolved from their headers. Quoted commas, multiline cells and byte spans are preserved.
+
+Font preparation checks Turkish glyphs in three existing game fonts and produces a small alias patch for the English `Fonts.remap`. Existing mappings are preserved. No font binaries are embedded or distributed; their hashes are read-only installation prerequisites. Missing or changed fonts stop installation before any writes. Font size, alignment and clipping still require in-game verification.
 
 The context index joins official localized comments to named Lua events and retains speaker labels, neighboring dialogue, source locations and hashes. Repeated IDs, alternate events and closing cues remain separate. It preserves conditions as evidence; it does not simulate the game or resolve inherited conditions. Missing or stale event names require manual investigation.
 
@@ -37,6 +40,7 @@ Araçlar Python 3.14 ve Windows .NET Framework C# derleyicisiyle doğrulanmışt
 ```powershell
 py -3.14 tools/catalog.py 'OYUN_KLASORU'
 py -3.14 tools/context.py index 'OYUN_KLASORU' --languages de fr
+py -3.14 tools/font_patch.py 'OYUN_KLASORU'
 py -3.14 tools/validate.py
 py -3.14 tools/package.py --version 0.1.0-onizleme --preview
 py -3.14 tools/verify_payload.py
@@ -45,6 +49,8 @@ py -3.14 tools/verify_payload.py
 ```
 
 Envanter, kaynağı değiştirmeden İngilizce SJSON dosyalarını, altyazı CSV'lerini ve konuşma içeren Lua tablolarını okur. CSV başlığından doğru metin sütununu bulur; farklı sütun düzenleri, tırnaklar ve çok satırlı hücreler korunur. Oyun betikleri çalıştırılmaz.
+
+Font hazırlığı, oyundaki üç mevcut fontun Türkçe karakterlerini kontrol eder ve İngilizce `Fonts.remap` için küçük bir eşleme üretir. Mevcut eşlemeler korunur. Font dosyaları gömülmez veya dağıtılmaz; özetleri kurulumun salt okunur ön koşullarıdır. Eksik veya değişmiş fontta hiçbir dosyaya yazılmadan durulur. Boyut, hizalama ve taşma oyun içinde ayrıca doğrulanmalıdır.
 
 Bağlam dizini resmî dillerdeki açıklamaları adlandırılmış Lua olaylarına bağlar; konuşmacı etiketlerini, çevre replikleri, kaynak konumlarını ve özetlerini korur. Tekrarlanan kimlikler, alternatif olaylar ve kapanış replikleri ayrı tutulur. Koşullar kanıt olarak saklanır; oyun çalıştırılmaz, üst tablolardan gelen koşullar çözümlenmiş sayılmaz. Bulunamayan veya eskimiş olay adları ayrıca incelenir.
 

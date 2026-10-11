@@ -49,6 +49,29 @@ static class InstallerTests
         Refuses(() => engine.Install(), "duplicate install refuses");
         engine.Restore(); Assert(Original(game, p), "restore is byte-identical");
         Assert(!File.Exists(Path.Combine(game, Engine.UninstallerName)), "uninstaller removed after successful restore");
+
+        string fontGame = Path.Combine(root, "font-remap"); var fontPayload = Fixture(fontGame);
+        fontPayload.files[0].path = "Content/Win/Fonts/en/Fonts.remap";
+        Write(SourcePath(fontGame, fontPayload.files[0].path), "prefix EN suffix");
+        fontPayload.requirements = new[] { "AlegreyaSCBold", "AlegreyaSCBoldTracking", "UbuntuMonoBold" }.Select(name => {
+            string path = "Content/Win/Fonts/en/" + name + ".xnb";
+            Write(SourcePath(fontGame, path), "font fixture");
+            return new RequiredFile { path = path, sha256 = Engine.Hash(Bytes("font fixture")) };
+        }).ToArray();
+        var fontEngine = new Engine(fontGame, fontPayload);
+        Write(SourcePath(fontGame, fontPayload.requirements[0].path), "modified font");
+        Refuses(() => fontEngine.Install(), "changed source font stops installation before writes");
+        Assert(!Directory.Exists(Path.Combine(fontGame, Engine.BackupName)), "font mismatch leaves no partial installation");
+        Write(SourcePath(fontGame, fontPayload.requirements[0].path), "font fixture");
+        fontEngine.Install(); Assert(Patched(fontGame, fontPayload), "font remap uses verified backup and installation");
+        Write(SourcePath(fontGame, fontPayload.requirements[0].path), "modified after installation");
+        fontEngine.Restore(); Assert(Original(fontGame, fontPayload), "font remap restored byte-identically");
+        Assert(File.ReadAllText(SourcePath(fontGame, fontPayload.requirements[0].path)) == "modified after installation", "restore preserves font binaries and ignores changed read-only prerequisites");
+        foreach (string forbidden in new[] { "Content/Win/Fonts/en/Custom.remap", "Content/Win/Fonts/fr/Fonts.remap", "Content/Win/Fonts/en/UbuntuMonoBold.xnb" })
+        {
+            fontPayload.files[0].path = forbidden;
+            Refuses(() => new Engine(fontGame, fontPayload), "unapproved font path rejected: " + forbidden);
+        }
         engine.Restore(); Assert(Original(game, p), "restore is idempotent");
         engine.Install(); Assert(Patched(game, p), "reinstall after restore");
         Write(SourcePath(game, p.files[1].path), "external modification");

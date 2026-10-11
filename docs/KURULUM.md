@@ -12,6 +12,8 @@ The current installer is an incomplete local preview, not a finished translation
 
 Original files are stored in `.hades-tr-backup` inside the game folder and verified using SHA-256. Keep that folder intact. Saved games, game executables and voice acting are not modified.
 
+The font alias file is backed up and restored with the text files. Three existing game fonts are checked for compatibility; their binaries are neither modified nor included in the installer. Other font overrides must be reviewed before installation.
+
 To remove the patch, run **Hades-Turkce-Yamayi-Kaldir.exe** from the game folder or choose the removal button in the installer. Verified originals are restored. The uninstaller removes itself after successful removal; original backups are retained. A short-lived helper in Windows TEMP removes the running uninstaller after it exits. The helper file may remain in TEMP.
 
 If a game update or another mod has changed a file, or a backup is damaged, the tool refuses to overwrite it. Inspect the reported file. Steam/Epic file verification can restore official files when needed. Remove the previous patch before applying a new version. Backups from a different source version are never silently replaced.
@@ -31,6 +33,8 @@ Mevcut paket geliştirme amaçlı, eksik çeviri içeren yerel bir ön sürümd�
 5. Oyunda **İngilizce** dilini seçin. Çevrilmeyen kısımlar İngilizce görünür.
 
 Kurulum orijinal dosyaları oyun klasöründeki `.hades-tr-backup` dizininde saklar. Her yedek SHA-256 ile doğrulanır. Bu dizini taşımayın veya silmeyin. Oyun kayıtları, seslendirmeler ve yürütülebilir oyun dosyaları değiştirilmez.
+
+Font eşleme dosyası da metinlerle birlikte yedeklenir ve geri yüklenir. Oyunun mevcut üç fontu uyumluluk için kontrol edilir; font dosyaları değiştirilmez ve kurulum aracına eklenmez. Başka font eşlemeleri varsa kurulumdan önce ayrıca incelenmelidir.
 
 Kaldırmak için oyun klasöründeki **Hades-Turkce-Yamayi-Kaldir.exe** dosyasını açın veya kurulum aracında **Çeviriyi kaldır** seçeneğini kullanın. Dosyalar doğrulanmış yedekten geri yüklenir. Kaldırma aracı başarılı işlem sonunda silinir; orijinal yedekler korunur. Windows'un çalışan EXE'yi kilitlemesi nedeniyle kendi kendini kaldırma işlemi, geçici klasörde çalışan kısa ömürlü bir yardımcı süreçle tamamlanır; yardımcı dosya geçici klasörde kalabilir.
 
