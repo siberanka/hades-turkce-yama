@@ -1,0 +1,27 @@
+# Yerel araştırma, özgün oyun dosyaları ve güvenilmeyen arşivler
+/ai/
+/.old/
+/AGENTS.md
+/Content/
+/originals/
+/backups/
+/dist/
+/build/
+*.exe
+*.dll
+*.zip
+*.7z
+*.log
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.pfx
+*.p12
+__pycache__/
+*.py[cod]
+.venv/
+.vs/
+bin/
+obj/
