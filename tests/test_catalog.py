@@ -72,6 +72,33 @@ class CatalogTests(unittest.TestCase):
         self.assertTrue(any('in-game' in e for e in validate([entry], [row], evidence)['errors']))
         self.assertTrue(validate([entry], [row])['errors'])
 
+    def test_layout_columns_and_escaped_choice_brackets_are_preserved(self):
+        source = r'\[ Damage: \Column 380 {$Value} \]'
+        entry = {'key': 'x', 'source': source, 'source_sha256': digest(source.encode()), 'scope': 'game'}
+        row = {'key': 'x', 'target': r'\[ Hasar: \Column 380 {$Value} \]',
+               'source_sha256': entry['source_sha256'], 'stage': 'draft'}
+        self.assertEqual(validate([entry], [row])['errors'], [])
+        row['target'] = r'[ Hasar: \Column 38 {$Value} ]'
+        self.assertTrue(any('marker' in error for error in validate([entry], [row])['errors']))
+
+    def test_numeric_style_change_detected_even_when_marker_counts_match(self):
+        source = 'Damage: {#OldFormat}{$TooltipData.Old}{!Icons.RightArrow}{#UpgradeFormat}{$TooltipData.New}'
+        entry = {'key': 'x', 'source': source, 'source_sha256': digest(source.encode()), 'scope': 'game'}
+        row = {'key': 'x', 'target': 'Hasar: {#OldFormat}{$TooltipData.Old}{!Icons.RightArrow}{#UpgradeFormat}{$TooltipData.New}',
+               'source_sha256': entry['source_sha256'], 'stage': 'draft'}
+        self.assertEqual(validate([entry], [row])['warnings'], [])
+        row['target'] = 'Hasar: {#UpgradeFormat}{$TooltipData.Old}{!Icons.RightArrow}{#OldFormat}{$TooltipData.New}'
+        report = validate([entry], [row])
+        self.assertEqual(report['errors'], [])
+        self.assertTrue(any('style scope' in warning for warning in report['warnings']))
+
+    def test_styled_tooltip_phrases_can_be_reordered(self):
+        source = 'Damage {#OldFormat}{$TooltipData.Damage}; speed {#UpgradeFormat}{$TooltipData.Speed}'
+        entry = {'key': 'x', 'source': source, 'source_sha256': digest(source.encode()), 'scope': 'game'}
+        row = {'key': 'x', 'target': 'Hız {#UpgradeFormat}{$TooltipData.Speed}; hasar {#OldFormat}{$TooltipData.Damage}',
+               'source_sha256': entry['source_sha256'], 'stage': 'draft'}
+        self.assertEqual(validate([entry], [row])['warnings'], [])
+
 
 if __name__ == '__main__':
     unittest.main()

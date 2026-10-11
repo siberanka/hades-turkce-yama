@@ -10,8 +10,22 @@ import unicodedata
 
 from catalog import ROOT, WORK, digest, write_json
 
-MARKERS = re.compile(r'\{[^{}]*\}|@[A-Za-z][A-Za-z0-9_\\/]*|%(?:\d+\$)?[sdif]')
+MARKERS = re.compile(r'\{[^{}]*\}|@[A-Za-z][A-Za-z0-9_\\/]*|%(?:\d+\$)?[sdif]|\\(?:Column\s+\d+|\[|\])')
 STAGES = {'draft', 'edited', 'context-reviewed', 'in-game-verified'}
+TOOLTIP_STYLE_TOKENS = re.compile(r'\{#[^{}]+\}|\{\$TooltipData\.[^{}]+\}')
+
+
+def tooltip_style_scopes(text):
+    """Conservative lexical check, not a simulation of the game's style stack."""
+    style = None
+    values = []
+    for match in TOOLTIP_STYLE_TOKENS.finditer(text):
+        token = match.group()
+        if token.startswith('{#'):
+            style = token
+        else:
+            values.append((token, style))
+    return Counter(values)
 
 
 def load_rows(folder: Path):
@@ -64,6 +78,8 @@ def validate(catalog, rows, reviews=None):
             errors.append(f'{where}: protected or out-of-scope source')
         if Counter(MARKERS.findall(entry['source'])) != Counter(MARKERS.findall(target)):
             errors.append(f'{where}: missing, added or changed format marker')
+        elif tooltip_style_scopes(entry['source']) != tooltip_style_scopes(target):
+            warnings.append(f'{where}: tooltip value formatting changed; review style scope')
         if target.count('{') != target.count('}'):
             errors.append(f'{where}: unbalanced braces')
         if any(ord(ch) < 32 and ch not in '\n\t\r' for ch in target):
