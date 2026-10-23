@@ -6,6 +6,5 @@
 *.cs text eol=lf
 *.ps1 text eol=crlf
 *.sh text eol=lf
-/ai/** export-ignore
+/calisma/** export-ignore
 /.old/** export-ignore
-/AGENTS.md export-ignore

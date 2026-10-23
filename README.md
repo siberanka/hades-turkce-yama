@@ -1,19 +1,64 @@
 # Hades Türkçe Yama
 
-Hades için Türkçe çeviri ve yedekli kurulum çalışması. Proje sahibi ve çevirmen: **siberanka**.
+Supergiant Games'in **Hades** oyunu için hazırlanmış, bağlama dayalı Türkçe çeviri ve yedekli kurulum aracı. Proje sahibi ve çevirmen: **siberanka**.
 
-**Geliştirme aşamasındadır.** Çeviri 25.629 metin kaydını kapsayan bir çalışma olarak sürüyor. Ön sürümlerde çevrilmeyen metinler İngilizce kalır; kurulum aracı paketin kapsamını gösterir. Tam sürüm için çeviri, bağlam, dil ve oyun içi görünüm kontrollerinin tamamlanması gerekir.
+## Durum
 
-Kurulum aracı Steam kütüphanelerini, Epic kurulum kayıtlarını ve yaygın oyun klasörlerini kontrol eder. Bulamazsa klasörü kullanıcı seçer. Kurulumdan önce kaynak dosyalar denetlenir, orijinaller yedeklenir ve yedeklerin bütünlüğü doğrulanır. Çeviri kaldırıldığında bu yedekler geri yüklenir.
+| Alan | Durum |
+| --- | --- |
+| Çeviri kapsamı | 25.629 / 25.629 metin kaydı (%100) |
+| Diyaloglar, arayüz, Kodeks, altyazılar ve şarkılar | Çevrildi |
+| Bütün metnin özgün metinle satır satır son okuması | Tamamlandı |
+| Oyun içi görünüm, font, taşma ve sesle zamanlama kontrolü | Sürüyor |
+
+Çeviri tamamlanmış durumdadır; oyun içi kontroller bitene kadar kurulum aracı **ön sürüm** olarak derlenir. Hata ve öneri bildirimleri için depo üzerinden konu açabilirsiniz.
+
+## Özellikler
+
+- Karakter sesine, sahneye ve olay sırasına göre hazırlanmış doğal Türkçe; tutarlı terim ve hitap kararları.
+- Steam kütüphaneleri, Epic kurulumları ve yaygın oyun klasörleri için otomatik bulma; bulunamazsa klasör seçimi.
+- Kurulumdan önce kaynak dosya sürümü denetimi, SHA-256 ile doğrulanmış yedekler ve bire bir geri yükleme.
+- Oyun klasörüne eklenen kaldırma aracı; oyun kayıtlarına, seslere ve oyun programına dokunulmaz.
+- Font dosyası dağıtmadan, oyunun kendi fontlarına yönlendirmeyle Türkçe karakter desteği.
+- İnternet bağlantısı, telemetri veya indirme yoktur.
+
+## Belgeler
 
 - [Kurulum ve kaldırma](docs/KURULUM.md)
+- [Kaynaktan derleme ve geliştirme](docs/GELISTIRME.md)
 - [Çeviri ilkeleri](docs/CEVIRI.md)
-- [Yerel geliştirme ve testler](docs/GELISTIRME.md)
-- [Haklar ve dağıtım kapsamı](NOTICE.md)
+- [Çeviri veri biçimi](ceviri/README.md)
+- [Katkıda bulunma](CONTRIBUTING.md)
+- [Güvenlik](SECURITY.md)
+- [Haklar ve bildirimler](NOTICE.md)
 - [Değişiklikler](CHANGELOG.md)
 
-Bu çalışma Supergiant Games tarafından hazırlanmış, onaylanmış veya desteklenen resmî bir ürün değildir. Hades ve ilgili oyun içeriğinin hakları Supergiant Games, LLC ve ilgili hak sahiplerine aittir.
+## Kaynaktan derleme (kısa yol)
 
-Özgün araç kodları MIT lisanslıdır. Bu lisans oyun içeriğine veya bu içerikten türetilen çeviriye dağıtım izni vermez. Kaynak depo kurulum ve doğrulama araçlarını içerir. Orijinal oyun dosyaları, başka yamaların metinleri, resmî görseller ve müzik depoda dağıtılmaz. Çeviri içeren herkese açık bir sürüm henüz yayımlanmamıştır.
+Windows'ta Python 3 ve .NET Framework 4.x yeterlidir; ek paket gerekmez. Oyunun yasal olarak sahip olduğunuz kurulumu yalnızca okunur:
 
-Hades'in [resmî mağaza sayfası](https://store.steampowered.com/app/1145360/Hades/) · [Supergiant Games](https://www.supergiantgames.com/)
+```powershell
+git clone https://github.com/siberanka/hades-turkce-yama.git
+cd hades-turkce-yama
+./tools/derle.ps1 -OyunKlasoru 'C:\Program Files (x86)\Steam\steamapps\common\Hades'
+```
+
+Kurulum aracı `dist/` klasörüne derlenir. Ayrıntılar için [geliştirme belgesine](docs/GELISTIRME.md) bakın.
+
+## Depo yapısı
+
+| Klasör | İçerik |
+| --- | --- |
+| `ceviri/` | Türkçe çeviri kayıtları (kimlik, kaynak özeti ve Türkçe metin) |
+| `tools/` | Envanter, doğrulama, paketleme, font eşlemesi ve derleme araçları |
+| `installer/` | Windows kurulum ve kaldırma aracı (C#) |
+| `tests/` | Python ve kurulum testleri |
+| `docs/` | Kurulum, geliştirme ve çeviri belgeleri |
+
+Depoda özgün oyun dosyaları, oyunun İngilizce metinleri, resmî görseller, müzik veya font dosyaları bulunmaz. Yama paketi derleme sırasında kullanıcının kendi oyun kurulumundan üretilir.
+
+## Haklar
+
+Bu çalışma Supergiant Games tarafından hazırlanmış, onaylanmış veya desteklenen resmî bir ürün değildir. Hades ve ilgili oyun içeriğinin hakları Supergiant Games, LLC ve ilgili hak sahiplerine aittir. Özgün araç kodları MIT lisanslıdır; çeviri metinlerinin durumu için [NOTICE.md](NOTICE.md) dosyasına bakın.
+
+[Hades resmî mağaza sayfası](https://store.steampowered.com/app/1145360/Hades/) · [Supergiant Games](https://www.supergiantgames.com/)

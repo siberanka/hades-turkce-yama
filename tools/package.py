@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 from collections import defaultdict
 
-from catalog import WORK, digest, encode, write_json
+from catalog import TRANSLATIONS, WORK, digest, encode, write_json
 from validate import load_rows, load_reviews, validate
 from font_patch import FONT_PATH, ALIASES, compatibility_patch
 
@@ -59,7 +59,7 @@ def build(catalog, manifest, rows, version, preview=False, reviews=None, font_co
 
 def main():
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--drafts', type=Path, default=WORK / 'translations')
+    p.add_argument('--drafts', type=Path, default=TRANSLATIONS)
     p.add_argument('--version', required=True)
     p.add_argument('--preview', action='store_true')
     p.add_argument('--output', type=Path, default=WORK / 'build/payload.json')

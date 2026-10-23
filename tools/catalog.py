@@ -11,12 +11,14 @@ import csv
 import hashlib
 import io
 import json
+import os
 from pathlib import Path
 import re
 import shutil
 
 ROOT = Path(__file__).resolve().parents[1]
-WORK = ROOT / 'ai'
+WORK = Path(os.environ.get('HADES_TR_CALISMA') or ROOT / 'calisma')
+TRANSLATIONS = ROOT / 'ceviri'
 TOKEN = re.compile(r'--\[(=*)\[.*?\]\1\]|--[^\r\n]*|/\*.*?\*/|//[^\r\n]*|"(?:\\.|[^"\\])*"|\'(?:\\.|[^\'\\])*\'|[A-Za-z_][\w.]*|[{}\[\]=,:]', re.S)
 FIELDS = {'DisplayName', 'Description', 'AdditionalDescription'}
 

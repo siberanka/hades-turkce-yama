@@ -1,0 +1,17 @@
+{"key": "Content/Subtitles/en/ZagreusField.csv::ZagreusField_1255::Line::1", "source_sha256": "06ddfbea2f6fd7ed52f3abb5bb3ba71486fe2c9504d7bd7ee1a859a5721a7cae", "target": "İyi."}
+{"key": "Content/Scripts/NPCData.lua::/VO/Hypnos_0288::Text::1", "source_sha256": "9c2cdb2cd18005040f1dcbb43376f823474ade403cc307e1304b63484abf8776", "target": "En iyi dostum nasıl, {#DialogueItalicFormat}ha{#PreviousFormat}?"}
+{"key": "Content/Scripts/NPCData.lua::/VO/Hypnos_0289::Text::1", "source_sha256": "197a48b43363f2a36bdb46fcdef07e1e8c2363eb24a64ef6aed88cd0f7ed3bfe", "target": "Bir dahaki sefere yenersin, değil mi?"}
+{"key": "Content/Scripts/NPCData.lua::/VO/Hypnos_0290::Text::1", "source_sha256": "78ea23634896951a4525dd81992df51fcc72df62266e20937c5aacc72d913155", "target": "Seni tutmayayım, ha?"}
+{"key": "Content/Scripts/NPCData.lua::/VO/Hypnos_0291::Text::1", "source_sha256": "442af7df53bfa1f50be1f48f4d9d5c71b18db2857e00d14eed002789293c213d", "target": "Kaydını yaptım, geçebilirsin!"}
+{"key": "Content/Scripts/NPCData.lua::/VO/Hypnos_0292::Text::1", "source_sha256": "ec1c5f548747ad1445360f727de359dd5a032fd334683a3698fe9e6a3ecf0bb6", "target": "En iyi dostun olması güzelmiş!"}
+{"key": "Content/Scripts/NPCData.lua::/VO/Hypnos_0293::Text::1", "source_sha256": "2a886ff6cdb7194eb11fdd8727475dfd6134ac0c90c9c65a48b476c7cb08b727", "target": "Seninle konuşabildim; öldüğüne sevindim!"}
+{"key": "Content/Scripts/NPCData.lua::/VO/Hypnos_0294::Text::1", "source_sha256": "2e32fc19a9c2cd1dff683cdc2e3f11ad1cf2799a281d59d0ecd214e860b33d56", "target": "Böyle dertleşmek güzel, değil mi?"}
+{"key": "Content/Scripts/NPCData.lua::/VO/Hypnos_0295::Text::1", "source_sha256": "175baaff6cd2dc49fe96e09dae9f047367a9c267c892c98fabd16da47228d525", "target": "Bir daha öldüğünde görüşürüz, tamam mı?"}
+{"key": "Content/Scripts/NPCData.lua::/VO/Hypnos_0296::Text::1", "source_sha256": "b0c7d4dfaa6feca47dfc5b1ea9b5b81102ee7a463ab94b648945103cb67bb205", "target": "Umarım burada hoş vakit geçirirsin!"}
+{"key": "Content/Scripts/NPCData.lua::/VO/Hypnos_0297::Text::1", "source_sha256": "97cfde98a2d8cf747e2e9f52b198584fe5df0e084dc31e696869cb5ae367a572", "target": "Doldurmak istersen burada bir anketim var?"}
+{"key": "Content/Scripts/NPCData.lua::/VO/Hypnos_0298::Text::1", "source_sha256": "61334e29a2f7ca7b64426878584c74244ab0feda0735c516269c10740143c7c4", "target": "Hades’in Konağı’na hoş geldin! Buyur geç!"}
+{"key": "Content/Scripts/NPCData.lua::/VO/Hypnos_0299::Text::1", "source_sha256": "d0192142fccfdc122b7c48464984df6838d6860510ea223b4399d592f0e44eef", "target": "Hades’in Konağı’na hoş... Ah, biliyorsun işte!"}
+{"key": "Content/Scripts/NPCData.lua::/VO/Hypnos_0300::Text::1", "source_sha256": "b8f5f8c4b1f438979dc8fc94952ab454ba42af626c6963b10a9bf82529dd8ca1", "target": "En sık gelen konuğumuz, yeniden hoş geldin!"}
+{"key": "Content/Scripts/NPCData.lua::/VO/Hypnos_0301::Text::1", "source_sha256": "2e6613ecfea133eaacba957269f83678960a1e41b77c5c1b88d4729801fd669a", "target": "Dışarı çıkmanı ve başka bir şekilde {#DialogueItalicFormat}ölmeni{#PreviousFormat} istiyorum!"}
+{"key": "Content/Scripts/NPCData.lua::/VO/Hypnos_0302::Text::1", "source_sha256": "08c1e7627ac9b43e4e3ec87feaf1316db30e7a3753d5c71d50ad668eaa0e27c2", "target": "Duymadıysan söyleyeyim: Kaçış yok!"}
+{"key": "Content/Scripts/NPCData.lua::/VO/Hypnos_0303::Text::1", "source_sha256": "cbe4b01283507925dd460de450ea8010d00fd91184ec4a406f48259662b1a4c3", "target": "Bunu {#DialogueItalicFormat}yapabilirsin{#PreviousFormat}! Her ne yapıyorsan!"}

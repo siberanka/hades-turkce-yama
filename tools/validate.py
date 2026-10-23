@@ -8,7 +8,7 @@ from pathlib import Path
 import re
 import unicodedata
 
-from catalog import ROOT, WORK, digest, write_json
+from catalog import ROOT, TRANSLATIONS, WORK, digest, write_json
 
 MARKERS = re.compile(r'\{[^{}]*\}|@[A-Za-z][A-Za-z0-9_\\/]*|%(?:\d+\$)?[sdif]|\\(?:Column\s+\d+|\[|\])')
 STAGES = {'draft', 'edited', 'context-reviewed', 'in-game-verified'}
@@ -53,6 +53,8 @@ def load_rows(folder: Path):
         for number, line in enumerate(path.read_text(encoding='utf-8').splitlines(), 1):
             if line.strip():
                 row = json.loads(line)
+                # Yayımlanan kayıtlar inceleme kanıtı taşımaz; aşama belirtilmemişse taslak sayılır.
+                row.setdefault('stage', 'draft')
                 row['_location'] = f'{path.name}:{number}'
                 result.append(row)
     return result
@@ -128,7 +130,7 @@ def validate(catalog, rows, reviews=None):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--drafts', type=Path, default=WORK / 'translations')
+    parser.add_argument('--drafts', type=Path, default=TRANSLATIONS)
     args = parser.parse_args()
     catalog = json.loads((WORK / 'cache/catalog.json').read_text(encoding='utf-8'))
     report = validate(catalog, load_rows(args.drafts), load_reviews())

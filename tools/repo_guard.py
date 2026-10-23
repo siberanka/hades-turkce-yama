@@ -4,9 +4,10 @@ import re
 import subprocess
 from pathlib import PurePosixPath
 
-ALLOWED_ROOTS = {'installer', 'tools', 'tests', 'docs', '.githooks'}
+ALLOWED_ROOTS = {'installer', 'tools', 'tests', 'docs', 'ceviri', '.githooks'}
 ALLOWED_TOP = {'.gitignore', '.gitattributes', '.editorconfig', 'README.md', 'LICENSE', 'NOTICE.md', 'CHANGELOG.md', 'CONTRIBUTING.md', 'SECURITY.md'}
 ALLOWED_SUFFIXES = {'.cs', '.py', '.ps1', '.md', '.manifest'}
+TRANSLATION_SUFFIXES = {'.jsonl', '.md'}
 PATTERNS = {
     'access token': re.compile(rb'(?:gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{25,}|glpat-[A-Za-z0-9_-]{15,})'),
     'private key': re.compile(rb'-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----'),
@@ -47,9 +48,10 @@ def main():
     for raw, reference, kind in objects:
         name = raw.decode('utf-8')
         path = PurePosixPath(name)
+        suffixes = TRANSLATION_SUFFIXES if path.parts[0] == 'ceviri' else ALLOWED_SUFFIXES
         allowed = name in ALLOWED_TOP or (path.parts[0] in ALLOWED_ROOTS and
-                  (path.suffix in ALLOWED_SUFFIXES or name in {'.githooks/pre-commit', '.githooks/pre-push'}))
-        if kind != b'blob' or not allowed or any(part.lower() in {'ai', '.old', '.github', '.gitlab', 'content', 'dist', 'build', '__pycache__'} for part in path.parts):
+                  (path.suffix in suffixes or name in {'.githooks/pre-commit', '.githooks/pre-push'}))
+        if kind != b'blob' or not allowed or any(part.lower() in {'calisma', '.old', '.github', '.gitlab', 'content', 'dist', 'build', '__pycache__'} for part in path.parts):
             errors.append(name + ': disallowed repository path')
             continue
         data = git('show', reference)

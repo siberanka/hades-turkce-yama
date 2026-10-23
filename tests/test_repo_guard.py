@@ -21,18 +21,18 @@ class HistoryGuardTests(unittest.TestCase):
             git('config', 'user.email', '164649238+siberanka@users.noreply.github.com')
             git('config', 'core.hooksPath', '.no-test-hooks')
             (root / 'README.md').write_text('Synthetic test repository\n', encoding='utf-8')
-            (root / 'ai').mkdir()
-            private = root / 'ai/private.txt'
+            (root / 'calisma').mkdir()
+            private = root / 'calisma/private.txt'
             private.write_text('Synthetic private cache\n', encoding='utf-8')
             git('add', '.')
             git('commit', '--quiet', '-m', 'test: initial fixture')
-            git('rm', 'ai/private.txt')
+            git('rm', 'calisma/private.txt')
             git('commit', '--quiet', '-m', 'test: remove private fixture')
             current = subprocess.run([sys.executable, str(GUARD)], cwd=root, capture_output=True)
             self.assertEqual(current.returncode, 0, current.stderr)
             history = subprocess.run([sys.executable, str(GUARD), '--history'], cwd=root, capture_output=True)
             self.assertNotEqual(history.returncode, 0)
-            self.assertIn(b'ai/private.txt: disallowed repository path', history.stderr)
+            self.assertIn(b'calisma/private.txt: disallowed repository path', history.stderr)
 
 
 if __name__ == '__main__':

@@ -4,7 +4,7 @@ import base64
 import json
 from pathlib import Path
 
-from catalog import WORK, csv_strings, sjson_strings, digest, write_json
+from catalog import TRANSLATIONS, WORK, csv_strings, sjson_strings, digest, write_json
 from validate import load_rows
 from font_patch import FONT_PATH, verify_compatibility
 
@@ -12,7 +12,7 @@ from font_patch import FONT_PATH, verify_compatibility
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--payload', type=Path, default=WORK / 'build/payload.json')
-    p.add_argument('--drafts', type=Path, default=WORK / 'translations')
+    p.add_argument('--drafts', type=Path, default=TRANSLATIONS)
     args = p.parse_args()
     payload = json.loads(args.payload.read_text(encoding='utf-8'))
     translations = {r['key']: r['target'] for r in load_rows(args.drafts)}

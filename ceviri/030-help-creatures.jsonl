@@ -1,0 +1,120 @@
+{"key": "Content/Game/Text/en/HelpText.en.sjson::SpreadShotUnitMiniboss::DisplayName::1", "source_sha256": "99c207594604fed3b71f74bc6a2f09257bef2a07e39c48e1a2eee7f0bbfa77d2", "target": "Vahşi Saçıcı"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::CrusherUnit::DisplayName::1", "source_sha256": "57d1fef2fa4bf04b96f332c62f9f1f6764659afefc11cf67d8b077dbcb55ed0d", "target": "Kafatası Ezen"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::CrusherUnitElite::DisplayName::1", "source_sha256": "4dba1fc4169d7c1db99b621d9108596b628053d046523eb351b319b70bfa042f", "target": "Vahşi Kafatası Ezen"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::FreezeShotUnit::DisplayName::1", "source_sha256": "c8bae27c7ef39160a394714cdfe9befa5016363f798f5b51641a88ffc2446e02", "target": "Gorgon"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::HitAndRunUnit::DisplayName::1", "source_sha256": "2183d02763edf3eb992da34a371894761c65ca26e59082dd96d401389f3e0307", "target": "Megagorgon"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::ShadeNaked::DisplayName::1", "source_sha256": "7962aef3267d4888f6a9d67dc0e6d8b88da98006f4c97f37175804bc9da73252", "target": "Yüce Ruh"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::ShadeSwordUnit::DisplayName::1", "source_sha256": "38d1136b9bd725787f7a7f619f1c439a8e39760f31548f7471859edf10503110", "target": "Parlak Kılıç"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::ShadeSpearUnit::DisplayName::1", "source_sha256": "ed2881801d973816fa69da456a4c61adbf06c1a2e9c265ac4a99fcda58cdc42d", "target": "Uzun Mızrak"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::ShadeBowUnit::DisplayName::1", "source_sha256": "a7f43eec3ecb79c3fb6e1675a445cf63bcd257eae9f454fe75888b0e2a1ae38c", "target": "Güçlü Yay"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::ShadeShieldUnit::DisplayName::1", "source_sha256": "2cd28b1a371185b0aa5e07224d0040826877a07a6adb8d959165c1938b6050b5", "target": "Büyük Kalkan"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::SplitShotUnit::DisplayName::1", "source_sha256": "9f6aa7cd7b4381cc1e2e8260641cc434e9453c31b267c64555e6db8cb40a4873", "target": "Bölücü"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::FlurrySpawner::DisplayName::1", "source_sha256": "116765279a658694deb55e5b28d0cbb27ce0c8b7906749fb603d0bc34aac4c14", "target": "Ruh Yakalayan"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::FlurrySpawnerElite::DisplayName::1", "source_sha256": "1773199fece544123e40d695feb1fe49abf547a9bd15887a7eb128bed2bccda4", "target": "Vahşi Ruh Yakalayan"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::ChariotSuicide::DisplayName::1", "source_sha256": "40e5e60eb816c98b2a6cc034290cfb9b68016c2c6e6084495d599cea8f8cb8b0", "target": "Alev Çarkı"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::Chariot::DisplayName::1", "source_sha256": "abc03ade88f6c3d12e0ad37fe3ee291a98d853b851a98cd1cd23966dfcb328d9", "target": "Nemea Savaş Arabası"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::Crawler::DisplayName::1", "source_sha256": "aa5c1baa237ad1f1f24fc24aec649dbb2e22d6d047b4327910b7c7f35da0e6c1", "target": "Sürüngen"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::RatThug::DisplayName::1", "source_sha256": "0c21364bf1309b764c711d48bb245a6fb0cb6810257c373305a59783b03b32a2", "target": "Dev Haşere"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::RatThugMiniboss::DisplayName::1", "source_sha256": "beec8369741f08b45fc63d5e16272cd7058f1ae8d39cbddc0a6575ff535109c6", "target": "Vahşi Dev Haşere"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::ThiefImpulseMineLayer::DisplayName::1", "source_sha256": "5b86cefe3be469c91e528069ba3b5390e7a5aeb9a557d197b0995e5a53ac933d", "target": "Musibet"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::ThiefImpulseMineLayerMiniboss::DisplayName::1", "source_sha256": "2d789ba3cb62a4c373f23ad7b9d0bc1063bee1b6b7690133f18807d7bdc06907", "target": "Vahşi Musibet"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::HeavyRangedForked::DisplayName::1", "source_sha256": "fef69720245a99681e5f225ee673b8ac07103101a5b0f52ca37c393763ce7495", "target": "Yılan Taşı"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::HeavyRangedForkedMiniboss::DisplayName::1", "source_sha256": "3818dcb7479ceac320ba653e62649ba50c7ae06ce1942227cb124324f8e142a8", "target": "Vahşi Yılan Taşı"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::SatyrRanged::DisplayName::1", "source_sha256": "9f483fb394035540dfa06f940e94242ce6d66ea67305e55387612dd8d03c5b97", "target": "Satir Tarikatçısı"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::SatyrRangedMiniboss::DisplayName::1", "source_sha256": "9d5ea0ec55c379b08d2d784729f4d60eb3be0a807a5893b32ddf9b5187f9111c", "target": "Vahşi Satir Tarikatçısı"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::SpikeTrap::DisplayName::1", "source_sha256": "6ac058681c1c1bcaaca6eb76f2bb55de005e693d39b4bdb54def2720cced982f", "target": "Diken Tuzağı"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::DartTrap::DisplayName::1", "source_sha256": "5fe8c1e3e2a7d68acc4169991c77d7ba3c14dc5d430f9297e357fd9eac5d70ec", "target": "Ok Tuzağı"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::BlastCubeFused::DisplayName::1", "source_sha256": "8c8d124907338d9ece9c438c67c50000c728560168f5033688ac6a640ab7b939", "target": "Gölgeler Çömleği"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::HydraHeadImmortal::DisplayName::1", "source_sha256": "c8b1d6e07690d1c59335bdbe3c41989e592774d28d4d1424ff3ace2aca013d40", "target": "Kemik Hydra"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::HydraHeadImmortal_Full::DisplayName::1", "source_sha256": "bdd82801ee17a387b29d87b648803fe836c024bcc40ba564a26c1e591779f671", "target": "Lerna’nın Kemik Hydra’sı"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::HydraHeadImmortal_NickName::DisplayName::1", "source_sha256": "6eb0de79dbdf3af9c063ed727a766627b405df935adb5cd6b587f63021b91d0e", "target": "Lernie, Kemik Hydra"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::Theseus::Description::1", "source_sha256": "addf61f7d2f41b4e9fefe5ec3cafc6f35fc47bbdca5006b8d33cb3471bbe1bf1", "target": "Atina Kahramanı"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::Theseus::DisplayName::1", "source_sha256": "79192f76a7b33c81b15b0d48984461aa8d092f9d753b43bf497de0408b6cbd9b", "target": "Theseus"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::Minotaur::Description::1", "source_sha256": "5c786bccd9852e2302ef299e9ef3e8f3bd8084a4d7c64ff117d14ed297f9acef", "target": "Minos’un Boğası"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::Minotaur::DisplayName::1", "source_sha256": "b9b2e2e5356e4dee89563f863ba9a47d1713d6ec500d4a53a8cf006d97adb2fb", "target": "Asterius"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::Minotaur_Full::DisplayName::1", "source_sha256": "0af2ed1399cbcd939b981df28a18e0a0c337620cbf259763a8fc2c7b52d998e2", "target": "Asterius, Minos’un Boğası"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::Minotaur_NickName::DisplayName::1", "source_sha256": "128e2dbdcceeb58d325d2c7e92f8f26fef939fad540e9987a49225903078f1c5", "target": "Minotor"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::Hades_Full::DisplayName::1", "source_sha256": "3e823a75bc91f1f5e5459cb9a7c4938d092e57e2a65e07fca23d4c53dd020f75", "target": "Hades, Ölüler Tanrısı"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::CrawlerMiniBoss::DisplayName::1", "source_sha256": "6648e7bddfc2fc8f16c44d96435cdc7fc783df442938a15678e49bb4f7522512", "target": "Haşere Kralı"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::CrawlerMiniBoss_Full::DisplayName::1", "source_sha256": "d22e9e6093dcc2ff3107db0b8e4783b243b6f99415e7abb06e14a6f1a69d72d8", "target": "Minik Haşere"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::SmallEnemy::DisplayName::1", "source_sha256": "2d9eabcab5c9e5c7cc7c757527d43c20cb7fcb5c79eb71cb1c4e8e5709fa801e", "target": "İbliscik"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::HeavyLunger::DisplayName::1", "source_sha256": "fda1247c92527191f04d89185e7aa1f6cef905dd7f097fd4c9eddf2e8089e416", "target": "Dirilmiş Mızrakçı"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::SeekingShotUnit::DisplayName::1", "source_sha256": "674f371480a9447e55412cf7b76a9711b0999d8eabdb0aaabb960d6daa709da5", "target": "Şişen Sefil"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::TreasureImp::DisplayName::1", "source_sha256": "0f25a4c526ef4699003c2386c93db029d94d269c4f9501fb4830ec386002c0c8", "target": "Hırsızcık"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::GasTrapPassive::DisplayName::1", "source_sha256": "bf7219b5e53a2ea156e94216099eccc63f190f81201babd183e0e0b1b96d9366", "target": "Zehirli Tuzak"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::SpikeCube::DisplayName::1", "source_sha256": "fe29623743f53d43bf773a8455a39bfb61300e4d76801a611d0bf1e7177f573f", "target": "Dikenli Duvar"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::Fiend::DisplayName::1", "source_sha256": "6dc77d9423d6d49b3147cb36b6502e2cf15c2db68fa05f3de462f74b123ca225", "target": "Tartarus Muhafızı"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::PlayerUnit::Description::1", "source_sha256": "910c77a33bb091c6d75b190b8f55e90cd778ee9a06208471336300e74e8c220c", "target": "Yeraltı Prensi"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::PlayerUnit::DisplayName::1", "source_sha256": "df42c940841136d249038f92fc1049d5f38a42b88990ac66516342ff79116a57", "target": "Zagreus"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::PlayerUnit_Intro::DisplayName::1", "source_sha256": "df42c940841136d249038f92fc1049d5f38a42b88990ac66516342ff79116a57", "target": "Zagreus"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Hades_01::Description::1", "source_sha256": "75219e430e0fcf815204f0f8884901611cc8031740f7d0cf77149858605c0667", "target": "Ölüler Tanrısı"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Hades_01::DisplayName::1", "source_sha256": "f13eae2e44ce16ff2e4a6a8c7d4f7f2740aba7fa41418a4ddfff1d65bc21e5cc", "target": "Hades"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Cerberus_01::Description::1", "source_sha256": "bcd851ec8d169b74154bb949ce18bdccee25b9965cd287f6f837118f0b0858f8", "target": "Nam Salmış Bekçi Köpeği"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Cerberus_01::DisplayName::1", "source_sha256": "5a903fd04ee0c1782a0d32108621ce05580b2d70faa8d7500f2d1ee4a8c05c81", "target": "Cerberus"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Achilles_01::Description::1", "source_sha256": "df28a3cb3bfc8d68d54cc07a5f0c98fef5cb9756d74c10ff9f2fc641f0e72471", "target": "Unutulmuş Kahraman"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Achilles_01::DisplayName::1", "source_sha256": "214dfda1db1be33a49459a931aa2e086c5c875314f67dc2cd56ccfbc3e65334f", "target": "Achilles"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Nyx_01::Description::1", "source_sha256": "d991662dcf1a52b9f7b3dffdb222d18e8e07e29166b1a5132448bc2c9c0ccf15", "target": "Gecenin Vücut Bulmuş Hâli"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Nyx_01::DisplayName::1", "source_sha256": "b5531623339d38f4be95c5784d9aa09fed155d870a13225f66dc73a56b765b78", "target": "Nyx"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::CharFemaleGhost::Description::1", "source_sha256": "d991662dcf1a52b9f7b3dffdb222d18e8e07e29166b1a5132448bc2c9c0ccf15", "target": "Gecenin Vücut Bulmuş Hâli"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::CharFemaleGhost::DisplayName::1", "source_sha256": "b5531623339d38f4be95c5784d9aa09fed155d870a13225f66dc73a56b765b78", "target": "Nyx"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Hypnos_01::Description::1", "source_sha256": "9883dd2243d47790a0cc4484cf3b5988612a88b23e76cb652ebfe947ea04aed5", "target": "Uykunun Vücut Bulmuş Hâli"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Hypnos_01::DisplayName::1", "source_sha256": "6add491892d7158521b05169dbc21c39a23df41080c42d19f92491a9d7fae463", "target": "Hypnos"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Skelly_01::Description::1", "source_sha256": "f237ac857a841730eb2019f1bf15b6e91f486331c4fa08adab85037fb40d91fd", "target": "Talim Kuklası"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Skelly_01::DisplayName::1", "source_sha256": "e0e327f81a138fdcc44b7dc6f12393a075e62d03d1ac8c561d858605527df11a", "target": "Skelly"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Dusa_01::Description::1", "source_sha256": "8683c0784d24df95f4cefca28c2ee842ff2fbe795b621256f263525ce8266dcc", "target": "Görevine Bağlı Gorgon"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Dusa_01::DisplayName::1", "source_sha256": "aa2e0563b35acd5358792144462c8de4b7383afb20c4cb78b025990e74ed7240", "target": "Dusa"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_FurySister_01::Description::1", "source_sha256": "34eedc9497f26eb5f412d9662b68a08457dbd8dca748548c06d0f20d0b661170", "target": "Erinyslerin İlki"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_FurySister_01::DisplayName::1", "source_sha256": "6f9c342352d9199291989f546937cb38ac65613fed8a3a994c254391ca5bfe49", "target": "Megaera"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::Harpy::DisplayName::1", "source_sha256": "9b69b33f5a2b3efca514e8e3237312d4241f37ac0867cecc4213eff659697652", "target": "Megaera, Erinys"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_FurySister_02::Description::1", "source_sha256": "383d01283dadcbdd3451029317cc4ac6e59f22667375653a1fd58b1bff3bf940", "target": "Tutkunun Azabı"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_FurySister_02::DisplayName::1", "source_sha256": "e2afa02661cd69befba9388421ad5ae2b39c3052483e62e4bc80a0a24901b63b", "target": "Alecto"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::Harpy2::Description::1", "source_sha256": "383d01283dadcbdd3451029317cc4ac6e59f22667375653a1fd58b1bff3bf940", "target": "Tutkunun Azabı"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::Harpy2::DisplayName::1", "source_sha256": "e2afa02661cd69befba9388421ad5ae2b39c3052483e62e4bc80a0a24901b63b", "target": "Alecto"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::Harpy2_Full::DisplayName::1", "source_sha256": "49e23330094aeb6f2a8aa5d890dadc9fbd34ad1956aed04063ddbbdf36d5c75a", "target": "Alecto, Erinys"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_FurySister_03::Description::1", "source_sha256": "04be6182e0bd4ed15d7e69f09ed5307a40de7022efd0f0a0a051b8e64f9a3c16", "target": "Cinayetin Azabı"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_FurySister_03::DisplayName::1", "source_sha256": "70e361ea21bff263c349f9265bfd0492d6b47d5cef7ba93bbb32f957f40cd512", "target": "Tisiphone"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::Harpy3::Description::1", "source_sha256": "04be6182e0bd4ed15d7e69f09ed5307a40de7022efd0f0a0a051b8e64f9a3c16", "target": "Cinayetin Azabı"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::Harpy3::DisplayName::1", "source_sha256": "70e361ea21bff263c349f9265bfd0492d6b47d5cef7ba93bbb32f957f40cd512", "target": "Tisiphone"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::Harpy3_Full::DisplayName::1", "source_sha256": "b056fb126f23d685cfd8035da3dd5c43c22cf14a5ab2572b07eab22597edfde9", "target": "Tisiphone, Erinys"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Charon_01::Description::1", "source_sha256": "5213d84ae75434b0f60bc0a6713b6c82a2761948b0a7d3ebba23ae1e06f4ec06", "target": "Styx Kayıkçısı"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Charon_01::DisplayName::1", "source_sha256": "ea9246ceeac13ba09feb72c503221ab8d05e2714a0a40b445c7b21761c173153", "target": "Charon"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::Charon_Full::DisplayName::1", "source_sha256": "4a2a4e81510659a7846e7abf44ae48eaab986ca872ec526cd9fc270232295d52", "target": "Charon, Styx Kayıkçısı"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Orpheus_01::Description::1", "source_sha256": "a0446d55ddacccc39a0e6cef1c093799b0b078fe413fe0f9fb9f7bc329bad829", "target": "Saray Müzisyeni"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Orpheus_01::DisplayName::1", "source_sha256": "f616d86c45e0a3ad47db4263743d97518d19060f1e6751fb8b23a6d42babff1c", "target": "Orpheus"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Sisyphus_01::Description::1", "source_sha256": "acc48ca7534bce084f9668c96cb9200f835615c35b435ce0e463179b1612704d", "target": "Azap Çeken Ruh"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Sisyphus_01::DisplayName::1", "source_sha256": "effaeaab3ab78457e007492784fac1c51afc61e26d866f36cb39aa181d6a6d1c", "target": "Sisyphus"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_SisyphusAndBouldy_01::DisplayName::1", "source_sha256": "f0b34cebf94967de99b8447e30a9e21fea1e7df891f14bc7badbaeb8f184d773", "target": "Sisyphus ve Bouldy"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Bouldy_01::DisplayName::1", "source_sha256": "e14ec7b57126bddafc842ba12f6d7e248d536fc5dcd9af15231342968aaff164", "target": "Bouldy"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Patroclus_01::Description::1", "source_sha256": "83b4009eb50d67eff316c902b3b2d4339c51b0385b2a9345b9af097da99b1cd0", "target": "Ölmüş Savaşçı"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Patroclus_01::DisplayName::1", "source_sha256": "4a8e9b8e9f13e8300f73061202ef60b2c627db5d649db371712bc456990b060b", "target": "Patroclus"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Eurydice_01::Description::1", "source_sha256": "7724027872375233791fe123332a0ab3e0dd79fa0fb4e47762095cbad6b2b48e", "target": "Kaygısız İlham Perisi"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Eurydice_01::DisplayName::1", "source_sha256": "eb4041eceb6c7f44a300c59205122d72b5ec8ed6c7e499a0064f620c1f896765", "target": "Eurydice"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Chaos_01::Description::1", "source_sha256": "1bce0b01965e87a6099e256c01718256474934d25807a95868a8bc0291d19528", "target": "İlksel Kaynak"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Chaos_01::DisplayName::1", "source_sha256": "7a85303a3ef2c980b2c41224cc608c03ad5069e2c959eb413e99de373c36847c", "target": "Chaos"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Thanatos_01::Description::1", "source_sha256": "e4b6f2e38bab71d1a3d255dc2fb6ff56ba0fb6e47bcfec2e58ac24b69f576611", "target": "Ölümün Vücut Bulmuş Hâli"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Thanatos_01::DisplayName::1", "source_sha256": "fc2b93379b0b356088ff678c36d599594fc34b8998ddfc18217af59dfc7dc208", "target": "Thanatos"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::Thanatos::Description::1", "source_sha256": "8baaf7a55020e1f56355d9c6f53064ca9ede69590624c4fb6c82c1713d27c62c", "target": "Pek çok ölümlünün ruhunu Yeraltı’na götüren, Ölümün Vücut Bulmuş Hâli."}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::Thanatos::DisplayName::1", "source_sha256": "fc2b93379b0b356088ff678c36d599594fc34b8998ddfc18217af59dfc7dc208", "target": "Thanatos"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_NymphGhost_01::Description::1", "source_sha256": "50d3d892c7abb2e42a0ce841905fe5bf482a723e68b0607c6bd39d7c2094857c", "target": "Yolunu Yitirmiş Peri"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_NymphGhost_01::DisplayName::1", "source_sha256": "eb4041eceb6c7f44a300c59205122d72b5ec8ed6c7e499a0064f620c1f896765", "target": "Eurydice"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_MaleGhost_02::Description::1", "source_sha256": "97f5618e6374566a8b52706ad79b5625e2dd371c9f727f77f8f1865e73477505", "target": "Yalnız Ruh"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_MaleGhost_02::DisplayName::1", "source_sha256": "4a8e9b8e9f13e8300f73061202ef60b2c627db5d649db371712bc456990b060b", "target": "Patroclus"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Zeus_01::Description::1", "source_sha256": "ea6c5b1cd996b0a68ba53a4f4570bfd234d9c1cef3e755ad19b55b3202241c73", "target": "Olimposluların Kralı"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Zeus_01::DisplayName::1", "source_sha256": "0ff0ef099ecb754b08b36053f2a8327f0d5b470cc3656c9fd043b9d1a2d719f5", "target": "Zeus"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Poseidon_01::Description::1", "source_sha256": "ddd5571dfc958255ea71b7eff46f3b85df62e32ffb7ddfa34b798466d64053b7", "target": "Deniz Tanrısı"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Poseidon_01::DisplayName::1", "source_sha256": "c67cf26cad70fe785d4b5e55a4d689712365cae5f11fbb70ca9a260fd7cfe93f", "target": "Poseidon"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Athena_01::Description::1", "source_sha256": "6d80440a4a1a09ac65a877c1b740e76b84aa4663b7578b0efb5cc4af76e37204", "target": "Bilgelik Tanrıçası"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Athena_01::DisplayName::1", "source_sha256": "412b726dc9dc6f02318798948a421e124f1ca5946be39b87cca764e063d6ebca", "target": "Athena"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Ares_01::Description::1", "source_sha256": "4beb2041bc5c0a2b22e59754422bcd3231751172fcd9dbf628c75892604108f3", "target": "Savaş Tanrısı"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Ares_01::DisplayName::1", "source_sha256": "a121acfeec0efe29576808bec824ab41a8a60227ba744a9aecddbd9ece9d500f", "target": "Ares"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Dionysus_01::Description::1", "source_sha256": "b3e052fe0ba077344ac692e8691d92f0bff116f0a314201ecdbdb4c4e0e9d3a0", "target": "Şarap Tanrısı"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Dionysus_01::DisplayName::1", "source_sha256": "6c4dfec40d4ac0350b33c79f9826d9eab9d3efa926084443aa8205fb036beb27", "target": "Dionysus"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Aphrodite_01::Description::1", "source_sha256": "8437418a872d44e443a7aac08caba744266853cd57f4bf23863aaaaed07af609", "target": "Aşk Tanrıçası"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Aphrodite_01::DisplayName::1", "source_sha256": "c7f9dfcc110e2eda1564a1335082b3bea6a764e62d8df590304e02c935517e79", "target": "Aphrodite"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Artemis_01::Description::1", "source_sha256": "320bc5b2ba5ec385882256d726b7f40275b13c18799203461be1149cc3734dd3", "target": "Av Tanrıçası"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Artemis_01::DisplayName::1", "source_sha256": "e3025e43344bf1fe29f4982090d36a62172a882e28e99dd02dfec2fe7327d96a", "target": "Artemis"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Hermes_01::Description::1", "source_sha256": "8e19939655f5a76716566e2ec0b9a938781bcc0925ec297067d4ed6aacfd6689", "target": "Hız Tanrısı"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Hermes_01::DisplayName::1", "source_sha256": "66e0988d1198afe049f2a5fedbb6e89c20c12dc3bc01ab3f5c13576d624f6e9b", "target": "Hermes"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Demeter_01::Description::1", "source_sha256": "635781f9d226796834ef4b59f36c9fe62094c71ce2d7de82685f8c539acdef5a", "target": "Mevsimler Tanrıçası"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Demeter_01::DisplayName::1", "source_sha256": "24e45e21df9fdcb074953332791b0ebbbbc8b7d594bacf9c330de522f4f623d1", "target": "Demeter"}
+{"key": "Content/Game/Text/en/HelpText.en.sjson::NPC_Persephone_01::Description::1", "source_sha256": "60d352e1762018b3f3ee7f5e91242e2c32e3f85d67b35043c135b593139abec8", "target": "Yeşilliğin Tanrıçası"}

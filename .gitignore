@@ -1,7 +1,6 @@
-# Yerel araştırma, özgün oyun dosyaları ve güvenilmeyen arşivler
-/ai/
+# Yerel çalışma alanı, özgün oyun dosyaları ve güvenilmeyen arşivler
+/calisma/
 /.old/
-/AGENTS.md
 /Content/
 /originals/
 /backups/

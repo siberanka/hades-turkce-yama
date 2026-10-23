@@ -1,5 +1,5 @@
 ﻿param(
-    [string]$Payload = "ai/build/payload.json",
+    [string]$Payload = "calisma/build/payload.json",
     [string]$Output = "dist/Hades-Turkce-Yama-0.1.0-onizleme.exe",
     [switch]$LocalArtwork
 )
@@ -19,7 +19,7 @@ $arguments = @('/nologo', '/target:winexe', '/platform:anycpu', '/optimize+', '/
     (Join-Path $project 'installer/Engine.cs'), (Join-Path $project 'installer/Discovery.cs'), (Join-Path $project 'installer/Cleanup.cs'), (Join-Path $project 'installer/InstallerForm.cs'), (Join-Path $project 'installer/Program.cs'))
 if ($LocalArtwork) {
     foreach ($slide in 1..4) {
-        $artPath = Join-Path $project ('ai/assets/slide' + $slide + '.jpg')
+        $artPath = Join-Path $project ('calisma/assets/slide' + $slide + '.jpg')
         if (-not (Test-Path -LiteralPath $artPath)) { throw 'Local artwork is missing.' }
         $arguments += ('/resource:' + $artPath + ',art.slide' + $slide + '.jpg')
     }
