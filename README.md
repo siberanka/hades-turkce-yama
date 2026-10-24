@@ -15,7 +15,7 @@ Supergiant Games'in **Hades** oyunu için hazırlanmış, bağlama dayalı Türk
 
 ## İndirme
 
-Güncel kurulum aracını [Releases](https://github.com/siberanka/hades-turkce-yama/releases/latest) sayfasından indirebilirsiniz. İndirdiğiniz dosyanın SHA-256 özetini sürüm sayfasındaki `.sha256` dosyasıyla karşılaştırın. Kurulum adımları için [kurulum belgesine](docs/KURULUM.md) bakın.
+Güncel kurulum aracını [Releases](https://github.com/siberanka/hades-turkce-yama/releases) sayfasından indirebilirsiniz. İndirdiğiniz dosyanın SHA-256 özetini sürüm sayfasındaki `.sha256` dosyasıyla karşılaştırın. Kurulum adımları için [kurulum belgesine](docs/KURULUM.md) bakın.
 
 ## Özellikler
 
