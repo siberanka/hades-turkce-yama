@@ -1,7 +1,7 @@
 ﻿param(
     [Parameter(Mandatory = $true)]
     [string]$OyunKlasoru,
-    [string]$Surum = "1.0.0-onizleme"
+    [string]$Surum = "1.0.0"
 )
 $ErrorActionPreference = 'Stop'
 $project = Split-Path -Parent $PSScriptRoot
@@ -19,7 +19,7 @@ try {
     Invoke-Adim 'Oyun metinlerinin envanteri' @('tools/catalog.py', $OyunKlasoru)
     Invoke-Adim 'Türkçe karakter font eşlemesi' @('tools/font_patch.py', $OyunKlasoru)
     Invoke-Adim 'Çeviri doğrulaması' @('tools/validate.py')
-    Invoke-Adim 'Yama paketi' @('tools/package.py', '--version', $Surum, '--preview')
+    Invoke-Adim 'Yama paketi' @('tools/package.py', '--version', $Surum)
     Invoke-Adim 'Paket doğrulaması' @('tools/verify_payload.py')
     Write-Output '==> Kurulum aracı derlemesi'
     & (Join-Path $PSScriptRoot 'build.ps1') -Output ('dist/Hades-Turkce-Yama-' + $Surum + '.exe')

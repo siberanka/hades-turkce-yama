@@ -1,6 +1,6 @@
 ﻿param(
     [string]$Payload = "calisma/build/payload.json",
-    [string]$Output = "dist/Hades-Turkce-Yama-0.1.0-onizleme.exe",
+    [string]$Output = "dist/Hades-Turkce-Yama-1.0.0.exe",
     [switch]$LocalArtwork
 )
 $ErrorActionPreference = 'Stop'

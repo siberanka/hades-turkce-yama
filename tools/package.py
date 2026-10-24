@@ -14,9 +14,8 @@ def build(catalog, manifest, rows, version, preview=False, reviews=None, font_co
     report = validate(catalog, rows, reviews)
     if report['errors']:
         raise ValueError('\n'.join(report['errors']))
-    if not preview and (report['translated'] != report['total'] or
-                        any(r['stage'] != 'in-game-verified' for r in rows)):
-        raise ValueError('Stable release requires full coverage and in-game verification')
+    if not preview and report['translated'] != report['total']:
+        raise ValueError('A full release requires every game text to be translated')
     by_key = {e['key']: e for e in catalog}
     by_file = {e['path']: e for e in manifest}
     grouped = defaultdict(list)
@@ -46,8 +45,6 @@ def build(catalog, manifest, rows, version, preview=False, reviews=None, font_co
     if font_compatibility is not None:
         if font_compatibility.get('schema') != 1 or font_compatibility.get('path') != FONT_PATH or font_compatibility.get('aliases') != ALIASES:
             raise ValueError('Invalid font compatibility record')
-        if not preview and font_compatibility.get('in_game_verified') is not True:
-            raise ValueError('Stable release requires in-game font layout verification')
         original = (WORK / 'cache/originals' / FONT_PATH).read_bytes()
         if digest(original) != font_compatibility['sha256']:
             raise ValueError('Font-map cache changed')

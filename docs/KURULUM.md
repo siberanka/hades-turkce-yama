@@ -1,6 +1,6 @@
 # Kurulum ve kaldırma
 
-Kurulum aracı Windows'ta çalışır ve .NET Framework 4.x gerektirir. macOS, Linux/Proton ve konsollar için doğrulanmış bir kurulum aracı değildir. Kurulum aracını [Releases](https://github.com/siberanka/hades-turkce-yama/releases) sayfasından indirip SHA-256 özetini doğrulayabilir veya [kaynaktan kendiniz derleyebilirsiniz](GELISTIRME.md).
+Kurulum aracı Windows'ta çalışır ve .NET Framework 4.x gerektirir. macOS, Linux/Proton ve konsollar için doğrulanmış bir kurulum aracı değildir. Kurulum aracını [Releases](https://github.com/siberanka/hades-turkce-yama/releases/latest) sayfasından indirip SHA-256 özetini doğrulayabilir veya [kaynaktan kendiniz derleyebilirsiniz](GELISTIRME.md).
 
 ## Kurulum
 

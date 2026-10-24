@@ -9,13 +9,13 @@ Supergiant Games'in **Hades** oyunu için hazırlanmış, bağlama dayalı Türk
 | Çeviri kapsamı | 25.629 / 25.629 metin kaydı (%100) |
 | Diyaloglar, arayüz, Kodeks, altyazılar ve şarkılar | Çevrildi |
 | Bütün metnin özgün metinle satır satır son okuması | Tamamlandı |
-| Oyun içi görünüm, font, taşma ve sesle zamanlama kontrolü | Sürüyor |
+| Oyun içi görünüm, font ve taşma kontrolü | Geri bildirimle sürüyor |
 
-Çeviri tamamlanmış durumdadır; oyun içi kontroller bitene kadar kurulum aracı **ön sürüm** olarak derlenir. Hata ve öneri bildirimleri için depo üzerinden konu açabilirsiniz.
+Çeviri tamamlanmıştır. Oyun içinde fark ettiğiniz yazım, anlam, font veya taşma sorunlarını depo üzerinden konu açarak bildirebilirsiniz.
 
 ## İndirme
 
-Güncel kurulum aracını [Releases](https://github.com/siberanka/hades-turkce-yama/releases) sayfasından indirebilirsiniz. İndirdiğiniz dosyanın SHA-256 özetini sürüm sayfasındaki `.sha256` dosyasıyla karşılaştırın. Kurulum adımları için [kurulum belgesine](docs/KURULUM.md) bakın.
+Güncel kurulum aracını [Releases](https://github.com/siberanka/hades-turkce-yama/releases/latest) sayfasından indirebilirsiniz. İndirdiğiniz dosyanın SHA-256 özetini sürüm sayfasındaki `.sha256` dosyasıyla karşılaştırın. Kurulum adımları için [kurulum belgesine](docs/KURULUM.md) bakın.
 
 ## Özellikler
 

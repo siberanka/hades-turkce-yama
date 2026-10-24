@@ -26,6 +26,6 @@ Bu bildirim amaç ve üretim süreci hakkında şeffaflık sağlar; hak sahibi a
 
 Araçlar Python standart kütüphanesini ve Windows .NET Framework bileşenlerini kullanır; bu çalışma ortamları kurulum aracının içine eklenmez. Font dosyaları dağıtılmaz; Türkçe karakter desteği oyunun kendi fontlarına yönlendirmeyle sağlanır. Hades müziği kurulum aracına gömülmez; kullanıcı isterse kendi yerel ses dosyasını seçebilir.
 
-Kurulum aracının yerel önizleme derlemesi resmî ekran görüntüleri içerebilir; böyle bir derleme yalnızca yerel kullanım içindir ve yayımlanmaz. Normal derleme özgün geometrik tasarım kullanır.
+Kurulum aracının yalnızca yerelde kullanılan görselli derlemesi resmî ekran görüntüleri içerebilir; böyle bir derleme yalnızca yerel kullanım içindir ve yayımlanmaz. Normal derleme özgün geometrik tasarım kullanır.
 
 Proje, Supergiant Games ile bağlantılı değildir ve resmî destek iddiası taşımaz.

@@ -168,7 +168,7 @@ namespace HadesTurkce
             foreach (var f in payload.files) Transform(Read(Under(root, f.path)), f);
             return String.Format("Dosyalar uyumlu. {0}/{1} metin kaydı; {2} dosya.\r\n{3}",
                 payload.translated, payload.total, payload.files.Length,
-                payload.preview ? "ÖN SÜRÜM: Çeviri eksiktir; oyun içi doğrulama tamamlanmamıştır." : "Tam çeviri paketi.");
+                payload.preview ? "Deneme paketi: çeviri eksik olabilir." : "Tam çeviri paketi.");
         }
         public void Install(Action<int> afterWrite = null)
         {
