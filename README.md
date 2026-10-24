@@ -13,6 +13,10 @@ Supergiant Games'in **Hades** oyunu için hazırlanmış, bağlama dayalı Türk
 
 Çeviri tamamlanmış durumdadır; oyun içi kontroller bitene kadar kurulum aracı **ön sürüm** olarak derlenir. Hata ve öneri bildirimleri için depo üzerinden konu açabilirsiniz.
 
+## İndirme
+
+Güncel kurulum aracını [Releases](https://github.com/siberanka/hades-turkce-yama/releases/latest) sayfasından indirebilirsiniz. İndirdiğiniz dosyanın SHA-256 özetini sürüm sayfasındaki `.sha256` dosyasıyla karşılaştırın. Kurulum adımları için [kurulum belgesine](docs/KURULUM.md) bakın.
+
 ## Özellikler
 
 - Karakter sesine, sahneye ve olay sırasına göre hazırlanmış doğal Türkçe; tutarlı terim ve hitap kararları.

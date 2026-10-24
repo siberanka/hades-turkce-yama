@@ -1,13 +1,14 @@
 # Değişiklikler
 
-## Çeviri tamamlandı — 23 Ekim 2026
+## 1.0.0-onizleme — 24 Ekim 2026
 
 - 25.629 metin kaydının tamamı Türkçeye çevrildi: arayüz, yardım metinleri, Kodeks, bütün karakter diyalogları, saha ve konak sesleri, anlatıcı ve şarkı altyazıları.
 - Bütün metin özgün İngilizce metinle satır satır karşılaştırılarak son okumadan geçirildi; sahne, konuşmacı, hitap ve terim tutarlılığı düzeltildi.
 - Çeviri kayıtları `ceviri/` klasöründe yayımlandı; yama paketi herkesin kendi oyun kurulumundan yeniden derlenebilir.
 - Tek komutluk derleme betiği: `tools/derle.ps1`.
 - Yerel çalışma alanı `calisma/` klasörüne taşındı; depo belgeleri yalnızca Türkçe olarak düzenlendi.
-- Oyun içi görünüm, font, taşma ve sesle zamanlama kontrolleri sürdüğü için kurulum aracı ön sürüm olarak derlenir.
+- Kurulum aracı GitHub Releases üzerinden ön sürüm olarak yayımlandı; resmî görsel ve müzik içermez, yanında SHA-256 özet dosyası bulunur.
+- Oyun içi görünüm, font, taşma ve sesle zamanlama kontrolleri sürdüğü için sürüm “ön sürüm” olarak işaretlidir.
 
 ## Kaynak araçlar — 12 Ekim 2026
 

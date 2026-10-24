@@ -15,9 +15,9 @@ Araçlar Windows'ta Python 3.14 ve .NET Framework 4.x C# derleyicisiyle doğrula
 ./tools/derle.ps1 -OyunKlasoru 'C:\Program Files (x86)\Steam\steamapps\common\Hades'
 ```
 
-Betik sırasıyla oyun metinlerinin envanterini çıkarır, Türkçe karakter font eşlemesini hazırlar, `ceviri/` kayıtlarını doğrular, yama paketini üretip yeniden doğrular ve kurulum aracını `dist/Hades-Turkce-Yama-0.1.0-onizleme.exe` olarak derler. Yanına `.sha256` özet dosyası yazılır. Oyun klasörü yalnızca okunur; derleme sırasında oyuna hiçbir şey kurulmaz.
+Betik sırasıyla oyun metinlerinin envanterini çıkarır, Türkçe karakter font eşlemesini hazırlar, `ceviri/` kayıtlarını doğrular, yama paketini üretip yeniden doğrular ve kurulum aracını `dist/Hades-Turkce-Yama-1.0.0-onizleme.exe` olarak derler. Yanına `.sha256` özet dosyası yazılır. Oyun klasörü yalnızca okunur; derleme sırasında oyuna hiçbir şey kurulmaz.
 
-Aynı oyun sürümü ve aynı `ceviri/` kayıtlarıyla üretilen yama paketi bayt düzeyinde aynıdır.
+Aynı oyun sürümü ve aynı `ceviri/` kayıtlarıyla üretilen yama paketi bayt düzeyinde aynıdır; derlenen EXE’nin özeti derleyici zaman damgası nedeniyle farklı olabilir.
 
 ## Adım adım
 
@@ -25,9 +25,9 @@ Aynı oyun sürümü ve aynı `ceviri/` kayıtlarıyla üretilen yama paketi bay
 py -3 tools/catalog.py 'OYUN_KLASORU'
 py -3 tools/font_patch.py 'OYUN_KLASORU'
 py -3 tools/validate.py
-py -3 tools/package.py --version 0.1.0-onizleme --preview
+py -3 tools/package.py --version 1.0.0-onizleme --preview
 py -3 tools/verify_payload.py
-./tools/build.ps1
+./tools/build.ps1 -Output dist/Hades-Turkce-Yama-1.0.0-onizleme.exe
 ```
 
 | Araç | Görevi |
