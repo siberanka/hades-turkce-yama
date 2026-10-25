@@ -29,11 +29,138 @@ static class InstallerTests
     }
     static bool Original(string root, Payload p) { return p.files.All(f => Engine.Hash(File.ReadAllBytes(SourcePath(root, f.path))) == f.before); }
     static bool Patched(string root, Payload p) { return p.files.All(f => Engine.Hash(File.ReadAllBytes(SourcePath(root, f.path))) == f.after); }
+    static Edit[] TextEdits(string path, byte[] original)
+    {
+        var counts = new System.Collections.Generic.Dictionary<string, int>();
+        return TextCatalog.Read(original, path).Select(entry => {
+            int occurrence; counts.TryGetValue(entry.id, out occurrence); counts[entry.id] = ++occurrence;
+            string target = "Türkçe: " + entry.value;
+            string encoded = path.EndsWith(".csv") ? "\"" + target.Replace("\"", "\"\"") + "\"" :
+                new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(target);
+            return new Edit { offset = entry.start, length = entry.length, entry = entry.id + "::" + occurrence,
+                source_sha256 = Engine.Hash(Bytes(entry.value)), replacement = Convert.ToBase64String(Bytes(encoded)) };
+        }).ToArray();
+    }
+    static PatchFile TextFile(string path, string original)
+    {
+        byte[] bytes = Bytes(original); var edits = TextEdits(path, bytes);
+        using (var stream = new MemoryStream())
+        {
+            int cursor = 0;
+            foreach (var edit in edits)
+            {
+                stream.Write(bytes, cursor, edit.offset - cursor);
+                var replacement = Convert.FromBase64String(edit.replacement); stream.Write(replacement, 0, replacement.Length);
+                cursor = edit.offset + edit.length;
+            }
+            stream.Write(bytes, cursor, bytes.Length - cursor);
+            return new PatchFile { path = path, before = Engine.Hash(bytes), after = Engine.Hash(stream.ToArray()), edits = edits };
+        }
+    }
+    static void CompatibilityTests(string root)
+    {
+        const string path = "Content/Game/Text/en/Test.en.sjson";
+        string original = "{ Texts=[{Id=\"a\" DisplayName=\"Hello\"}{Id=\"b\" DisplayName=\"Old\"}] }";
+        string current = "\uFEFF// {Id=\"a\" DisplayName=\"Hello\"}\r\n{ Texts=[{Id=\"new\" DisplayName=\"New 😀\"}{Id=\"b\" DisplayName=\"Changed\"}{Id=\"a\" DisplayName=\"Hello\"}] }\r\n";
+        var file = TextFile(path, original);
+        var rebased = TextCatalog.Rebase(Bytes(current), file);
+        string result = Encoding.UTF8.GetString(rebased.data);
+        Assert(rebased.applied == 1 && result.Contains("DisplayName=\"Türkçe: Hello\"") && result.Contains("DisplayName=\"Changed\"") && result.Contains("DisplayName=\"New 😀\""), "SJSON rebases reordered IDs and preserves changed/new text and Unicode");
+        Assert(result.StartsWith("\uFEFF// {Id=\"a\" DisplayName=\"Hello\"}\r\n") && result.EndsWith("\r\n"), "fallback preserves BOM, comments and line endings");
+        string raw = "{Id=\"credits\" Description=\"\"\"Raw \"credits\" {Id=\"a\" DisplayName=\"Hello\"}\nKeep original\"\"\"}";
+        var rawResult = TextCatalog.Rebase(Bytes(raw + current), file);
+        Assert(rawResult.applied == 1 && Encoding.UTF8.GetString(rawResult.data).StartsWith(raw), "SJSON triple-quoted raw blocks are preserved and do not hide following IDs");
+        Assert(TextCatalog.Rebase(Bytes(current.Replace("Id=\"a\" DisplayName=\"Hello\"}", "Id=\"other\" DisplayName=\"Hello\"}")), file).applied == 0, "identical English under a different ID never receives a translation");
+
+        var duplicate = TextFile(path, "{Id=\"x\" DisplayName=\"Same\"}{Id=\"x\" DisplayName=\"Same\"}");
+        duplicate.edits[1].replacement = Convert.ToBase64String(Bytes("\"Another target\""));
+        Assert(TextCatalog.Rebase(Bytes("// new\n{Id=\"x\" DisplayName=\"Same\"}{Id=\"x\" DisplayName=\"Same\"}"), duplicate).applied == 0, "ambiguous duplicate IDs with different translations are preserved");
+        duplicate = TextFile(path, "{Id=\"x\" DisplayName=\"Same\"}{Id=\"x\" DisplayName=\"Same\"}");
+        Assert(TextCatalog.Rebase(Bytes("{Id=\"x\" DisplayName=\"Same\"}"), duplicate).applied == 0, "changed duplicate occurrence counts are preserved");
+
+        string csvPath = "Content/Subtitles/en/Test.csv";
+        string csv = "Speaker,ID,ID,ID,,,Line\r\nRecorded,A,1,Voice_001,,,\"Hello, \"\"friend\"\"\nNext\"\r\n";
+        var csvFile = TextFile(csvPath, csv);
+        var csvResult = TextCatalog.Rebase(Bytes(csv + "Recorded,A,2,Voice_002,,,Keep English\r\n"), csvFile);
+        Assert(csvResult.applied == 1 && TextCatalog.Read(csvResult.data, csvPath)[0].value == "Türkçe: Hello, \"friend\"\nNext" && Encoding.UTF8.GetString(csvResult.data).EndsWith("Keep English\r\n"), "CSV quoted commas, escaped quotes and multiline cells rebase safely");
+        string luaPath = "Content/Scripts/Test.lua";
+        string lua = "Root={{Cue=\"/VO/X_01\", Args={Text=\"Do not patch\"},Text=\"Hello\"}}";
+        var luaResult = TextCatalog.Rebase(Bytes("--[[ {Cue=\"/VO/X_01\",Text=\"Hello\"} ]]\nIgnored=[=[{Cue=\"/VO/X_01\",Text=\"Hello\"}]=]\n" + lua), TextFile(luaPath, lua));
+        Assert(luaResult.applied == 1 && TextCatalog.Read(luaResult.data, luaPath).Count == 1 && Encoding.UTF8.GetString(luaResult.data).Contains("Args={Text=\"Do not patch\"}"), "Lua comments, long strings and nested argument Text stay untouched");
+        bool malformed = false;
+        try { TextCatalog.Rebase(Bytes("{ Id=\"a\" DisplayName=\"Hello\" } /* unfinished"), file); } catch (FormatException) { malformed = true; }
+        Assert(malformed, "unterminated comments fail closed");
+
+        string game = Path.Combine(root, "compatibility");
+        Write(Path.Combine(game, "x64", "Hades.exe"), "not executable"); Write(SourcePath(game, path), current);
+        var payload = new Payload { schema = 2, version = "compat", translated = 2, total = 2, files = new[] { file } };
+        var engine = new Engine(game, payload);
+        Assert(engine.Check().Contains("1 metin") && !Directory.Exists(Path.Combine(game, Engine.BackupName)), "partial compatibility check reports actual matches without writes");
+        engine.Install(); Assert(File.ReadAllBytes(SourcePath(game, path)).SequenceEqual(rebased.data), "partial installation writes only verified matches");
+        byte[] patchedBytes = File.ReadAllBytes(SourcePath(game, path));
+        string patched = File.ReadAllText(SourcePath(game, path));
+        Write(SourcePath(game, path), patched + "// external modification");
+        Refuses(() => engine.Restore(), "partial installation preserves external file modifications");
+        File.WriteAllBytes(SourcePath(game, path), patchedBytes);
+        engine.Restore(); Assert(File.ReadAllBytes(SourcePath(game, path)).SequenceEqual(Bytes(current)), "partial install restores the installed game version byte-identically");
+        string next = current + "// newer version\n"; Write(SourcePath(game, path), next);
+        engine.Install(); engine.Restore();
+        Assert(File.ReadAllBytes(SourcePath(game, path)).SequenceEqual(Bytes(next)) && Directory.GetDirectories(Path.Combine(game, Engine.BackupName, "snapshots")).Length == 2, "newer game version receives a separate backup without overwriting older snapshots");
+        bool failed = false;
+        try { engine.Install(n => { throw new IOException("Injected failure"); }); } catch (IOException) { failed = true; }
+        Assert(failed && File.ReadAllBytes(SourcePath(game, path)).SequenceEqual(Bytes(next)), "partial compatibility installation rolls back after write failure");
+
+        game = Path.Combine(root, "missing-compatible-file"); Write(Path.Combine(game, "x64", "Hades.exe"), "not executable");
+        Write(SourcePath(game, path), current);
+        var missing = TextFile("Content/Game/Text/en/Missing.en.sjson", original);
+        var partial = new Payload { schema = 2, version = "missing", translated = 4, total = 4, files = new[] { file, missing } };
+        var partialEngine = new Engine(game, partial); partialEngine.Install(); partialEngine.Restore();
+        Assert(File.ReadAllBytes(SourcePath(game, path)).SequenceEqual(Bytes(current)) && !File.Exists(SourcePath(game, missing.path)), "missing files are skipped without creating them and other matches restore");
+
+        game = Path.Combine(root, "malformed-compatible-file"); Write(Path.Combine(game, "x64", "Hades.exe"), "not executable");
+        Write(SourcePath(game, path), current); Write(SourcePath(game, missing.path), "{Id=\"a\" DisplayName=\"unfinished");
+        partialEngine = new Engine(game, partial); partialEngine.Install(); partialEngine.Restore();
+        Assert(File.ReadAllText(SourcePath(game, missing.path)) == "{Id=\"a\" DisplayName=\"unfinished", "unrecognized file syntax stays unchanged while other files install");
+
+        game = Path.Combine(root, "compatibility-font-mismatch"); var font = Fixture(game); font.schema = 2;
+        font.files[0].path = "Content/Win/Fonts/en/Fonts.remap"; Write(SourcePath(game, font.files[0].path), "new font mapping");
+        font.requirements = new[] { "AlegreyaSCBold", "AlegreyaSCBoldTracking", "UbuntuMonoBold" }.Select(name => {
+            string relative = "Content/Win/Fonts/en/" + name + ".xnb"; Write(SourcePath(game, relative), "font fixture");
+            return new RequiredFile { path = relative, sha256 = Engine.Hash(Bytes("font fixture")) };
+        }).ToArray();
+        var fontEngine = new Engine(game, font); fontEngine.Install(); fontEngine.Restore();
+        Assert(File.ReadAllText(SourcePath(game, font.files[0].path)) == "new font mapping", "unknown font mapping is preserved without blocking compatible texts");
+
+        game = Path.Combine(root, "compatibility-crash");
+        using (var child = Process.Start(new ProcessStartInfo(Assembly.GetExecutingAssembly().Location, "\"" + game + "\" --compat-crash") { UseShellExecute = false, CreateNoWindow = true }))
+        {
+            if (!child.WaitForExit(15000)) { child.Kill(); throw new Exception("Compatibility crash timeout"); }
+            Assert(child.ExitCode == 73, "compatibility install process stops abruptly after a write");
+        }
+        var receipt = new System.Web.Script.Serialization.JavaScriptSerializer().Deserialize<Receipt>(File.ReadAllText(Path.Combine(game, Engine.BackupName, "receipt.json")));
+        Assert(receipt.state == "prepared" && receipt.backupDirectory.StartsWith("snapshots/"), "compatibility crash preserves durable actual-version backup journal");
+        new Engine(game, new Payload { schema = 2, files = receipt.files }).Restore();
+        Assert(Original(game, new Payload { files = receipt.files }) && !File.Exists(Path.Combine(game, Engine.UninstallerName)), "new process restores actual-version bytes after compatibility crash");
+
+        game = Path.Combine(root, "no-compatible-text"); Write(Path.Combine(game, "x64", "Hades.exe"), "not executable");
+        Write(SourcePath(game, path), "{Id=\"unknown\" DisplayName=\"Keep\"}");
+        Refuses(() => new Engine(game, payload).Install(), "zero matches refuses installation");
+        Assert(!Directory.Exists(Path.Combine(game, Engine.BackupName)), "zero matches leaves no installation or backup directory");
+    }
     static void Main(string[] args)
     {
         string root = Path.GetFullPath(args[0]);
         if (Directory.Exists(root)) throw new Exception("Test directory must be fresh");
         Directory.CreateDirectory(root);
+        if (args.Length == 2 && args[1] == "--compat-crash")
+        {
+            Write(Path.Combine(root, "x64", "Hades.exe"), "not executable");
+            const string original = "{Id=\"test\" DisplayName=\"Hello\"}";
+            var files = new[] { "A", "B" }.Select(name => TextFile("Content/Game/Text/en/" + name + ".sjson", original)).ToArray();
+            foreach (var file in files) Write(SourcePath(root, file.path), "// shifted source\n" + original);
+            new Engine(root, new Payload { schema = 2, version = "crash", files = files, translated = 2, total = 2 }).Install(n => Environment.Exit(73));
+            throw new Exception("Compatibility crash injection did not run");
+        }
         if (args.Length == 2 && args[1] == "--crash")
         {
             var crashPayload = Fixture(root);
@@ -122,6 +249,7 @@ static class InstallerTests
         Assert(Original(game, p) && !File.Exists(Path.Combine(game, Engine.UninstallerName)), "next process restores every original and removes uninstaller");
 
         string steam = Path.Combine(root, "steam");
+        CompatibilityTests(root);
         Write(Path.Combine(steam, "steamapps", "libraryfolders.vdf"), "\"libraryfolders\" { \"1\" { \"path\" \"D:\\\\Games Library\" } }");
         Assert(Discovery.SteamLibraries(steam).Contains(@"D:\Games Library"), "Steam extra library with spaces");
         string epic = Path.Combine(root, "epic");

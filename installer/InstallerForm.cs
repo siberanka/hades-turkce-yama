@@ -255,7 +255,7 @@ namespace HadesTurkce
                     try
                     {
                         var engine = new Engine(selected, payload);
-                        if (action == "install") { engine.Install(); result = "Kurulum tamamlandı.\r\n\r\nOyunda İngilizce dilini seçin. Çevrilmemiş metinler İngilizce kalır.\r\n\r\nKaldırmak için oyun klasöründeki Hades-Turkce-Yamayi-Kaldir.exe dosyasını açabilirsiniz."; }
+                        if (action == "install") { engine.Install(); result = "Kurulum tamamlandı.\r\n\r\n" + engine.CompatibilitySummary + "\r\n\r\nOyunda İngilizce dilini seçin. Eşleşmeyen metinler özgün hâlinde kalır.\r\n\r\nKaldırmak için oyun klasöründeki Hades-Turkce-Yamayi-Kaldir.exe dosyasını açabilirsiniz."; }
                         else if (action == "restore") { engine.Restore(); result = "Çeviri kaldırıldı.\r\n\r\nOrijinal dosyalar geri yüklendi ve doğrulandı. Kaldırma aracı silindi; yedekler korundu."; }
                         else result = engine.Check();
                         success = true;

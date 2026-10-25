@@ -11,7 +11,7 @@ using System.Reflection;
 
 namespace HadesTurkce
 {
-    public sealed class Edit { public int offset; public int length; public string replacement; }
+    public sealed class Edit { public int offset; public int length; public string replacement; public string entry; public string source_sha256; }
     public sealed class PatchFile { public string path; public string before; public string after; public Edit[] edits; }
     public sealed class RequiredFile { public string path; public string sha256; }
     public sealed class Payload
@@ -20,13 +20,16 @@ namespace HadesTurkce
         public int translated; public int total; public PatchFile[] files;
         public RequiredFile[] requirements;
     }
-    public sealed class Receipt { public string state; public string version; public string uninstallerSha256; public PatchFile[] files; }
+    public sealed class Receipt { public string state; public string version; public string uninstallerSha256; public string backupDirectory; public PatchFile[] files; }
 
     public sealed class Engine
     {
         public const string BackupName = ".hades-tr-backup";
         public const string UninstallerName = "Hades-Turkce-Yamayi-Kaldir.exe";
         public string UninstallerHash { get; private set; }
+        public string CompatibilitySummary { get; private set; }
+        sealed class PlannedFile { public PatchFile record; public byte[] original, output; }
+        sealed class Plan { public List<PlannedFile> files = new List<PlannedFile>(); public int applied, skipped, rebased, skippedFiles; public bool fontSkipped; }
         readonly string root;
         readonly Payload payload;
         static readonly JavaScriptSerializer Json = new JavaScriptSerializer { MaxJsonLength = 32 * 1024 * 1024 };
@@ -46,7 +49,7 @@ namespace HadesTurkce
             if (!Directory.Exists(root)) throw new IOException("Oyun klasörü bulunamadı.");
             if (!new[] { "x64", "x64Vk", "x86" }.Any(d => File.Exists(Path.Combine(root, d, "Hades.exe"))))
                 throw new IOException("Seçilen klasörde Hades kurulumu bulunamadı.");
-            if (patch == null || patch.schema != 1 || patch.files == null)
+            if (patch == null || (patch.schema != 1 && patch.schema != 2) || patch.files == null)
                 throw new IOException("Geçersiz yama paketi.");
             ValidateFiles(patch.files);
             if (patch.requirements != null)
@@ -148,6 +151,12 @@ namespace HadesTurkce
         }
         string Backup { get { return Under(root, BackupName); } }
         string ReceiptPath { get { return Under(Backup, "receipt.json"); } }
+        string BackupRoot(Receipt receipt)
+        {
+            if (String.IsNullOrEmpty(receipt.backupDirectory)) return Backup;
+            if (!Regex.IsMatch(receipt.backupDirectory, "^snapshots/[a-f0-9]{32}$")) throw new IOException("Geçersiz yedek dizini.");
+            return Under(Backup, receipt.backupDirectory);
+        }
         void SaveReceipt(Receipt receipt)
         { AtomicWrite(ReceiptPath, Encoding.UTF8.GetBytes(Json.Serialize(receipt))); }
         FileStream Lock()
@@ -155,25 +164,75 @@ namespace HadesTurkce
             Directory.CreateDirectory(Backup);
             return new FileStream(Under(Backup, "operation.lock"), FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
         }
-        public string Check()
+        Plan Prepare()
         {
             ClosedGame();
-            if (payload.files.Length == 0) return "Bu araç paketinde çeviri bulunmuyor. Kurulum yapılamaz.";
+            if (payload.files.Length == 0) throw new IOException("Bu araç paketinde çeviri bulunmuyor. Kurulum yapılamaz.");
+            var plan = new Plan();
             if (payload.files.Any(f => f.path == "Content/Win/Fonts/en/Fonts.remap") &&
                 (payload.requirements == null || payload.requirements.Length != FontRequirements.Length))
                 throw new IOException("Font uyumluluğu için kaynak font kayıtları eksik.");
             foreach (var item in payload.requirements ?? new RequiredFile[0])
-                if (Hash(Read(Under(root, item.path))) != item.sha256)
-                    throw new IOException("Oyundaki font dosyası farklı; dosya korunuyor: " + item.path);
-            foreach (var f in payload.files) Transform(Read(Under(root, f.path)), f);
-            return String.Format("Dosyalar uyumlu. {0}/{1} metin kaydı; {2} dosya.\r\n{3}",
-                payload.translated, payload.total, payload.files.Length,
-                payload.preview ? "Deneme paketi: çeviri eksik olabilir." : "Tam çeviri paketi.");
+            {
+                string fontPath = Under(root, item.path);
+                if (!File.Exists(fontPath) || Hash(Read(fontPath)) != item.sha256)
+                {
+                    if (payload.schema == 1) throw new IOException("Oyundaki font dosyası farklı; dosya korunuyor: " + item.path);
+                    plan.fontSkipped = true;
+                }
+            }
+            foreach (var f in payload.files)
+            {
+                bool font = f.path == "Content/Win/Fonts/en/Fonts.remap";
+                string target = Under(root, f.path);
+                if (f.edits == null) throw new IOException("Eksik yama kayıtları.");
+                if (!File.Exists(target) || (font && plan.fontSkipped))
+                {
+                    if (payload.schema == 1) throw new IOException("Kaynak dosya bulunamadı: " + f.path);
+                    plan.skippedFiles++; if (!font) plan.skipped += f.edits.Length; continue;
+                }
+                byte[] data = Read(target), output;
+                string before = Hash(data);
+                int applied = f.edits.Length;
+                if (before == f.before) output = Transform(data, f);
+                else if (payload.schema == 1) throw new IOException("Kaynak dosya sürümü farklı: " + f.path);
+                else
+                {
+                    applied = 0; output = data;
+                    if (!font)
+                    {
+                        foreach (var e in f.edits)
+                            if (e == null || String.IsNullOrEmpty(e.entry) || e.source_sha256 == null || !HashPattern.IsMatch(e.source_sha256))
+                                throw new IOException("Metin eşleştirme kayıtları geçersiz.");
+                        try { var rebased = TextCatalog.Rebase(data, f); output = rebased.data; applied = rebased.applied; }
+                        catch (FormatException) { } // Unrecognized syntax stays byte-for-byte unchanged.
+                        catch (DecoderFallbackException) { }
+                        catch (RegexMatchTimeoutException) { }
+                        plan.rebased++;
+                    }
+                    else plan.fontSkipped = true;
+                }
+                if (!font) { plan.applied += applied; plan.skipped += f.edits.Length - applied; }
+                if (Hash(output) == before) { plan.skippedFiles++; continue; }
+                plan.files.Add(new PlannedFile { original = data, output = output,
+                    record = new PatchFile { path = f.path, before = before, after = Hash(output) } });
+            }
+            if (plan.applied == 0 || plan.files.Count == 0) throw new IOException("Güvenle uygulanabilir çeviri bulunamadı. Oyun dosyaları değiştirilmedi.");
+            CompatibilitySummary = String.Format("{0:N0} metin eşleşti; {1:N0} yama kaydı eşleşmedi. İşleme alınan dosya: {2}.", plan.applied, plan.skipped, plan.files.Count);
+            if (plan.rebased > 0) CompatibilitySummary += "\r\nFarklı sürümlerde yalnızca kimliği ve özgün metni eşleşen kayıtlar çevrilir. Diğer içerikler korunur.";
+            if (plan.skippedFiles > 0) CompatibilitySummary += String.Format("\r\n{0} dosya değiştirilmeden korundu.", plan.skippedFiles);
+            if (plan.fontSkipped) CompatibilitySummary += "\r\nFont eşlemesi uyumlu olmadığı için korunacak; Türkçe karakter görünümü oyun içinde kontrol edilmelidir.";
+            return plan;
+        }
+        public string Check()
+        {
+            Prepare();
+            return CompatibilitySummary;
         }
         public void Install(Action<int> afterWrite = null)
         {
             if (payload.files.Length == 0) throw new IOException("Bu paket çeviri içermiyor.");
-            Check();
+            Prepare();
             using (Lock())
             {
                 string uninstallPath = Under(root, UninstallerName);
@@ -183,43 +242,38 @@ namespace HadesTurkce
                     var previous = Json.Deserialize<Receipt>(Encoding.UTF8.GetString(Read(ReceiptPath)));
                     if (previous == null || previous.state != "restored")
                         throw new IOException("Önceki kurulumun yedeği mevcut. Yeni sürümden önce çeviriyi kaldırın.");
-                    RestoreCore(previous);
                     string history = Under(Backup, "history/" + Guid.NewGuid().ToString("N") + ".json");
                     Directory.CreateDirectory(Path.GetDirectoryName(history));
                     AtomicWrite(history, Encoding.UTF8.GetBytes(Json.Serialize(previous)));
                 }
-                var originals = new Dictionary<string, byte[]>();
-                var outputs = new Dictionary<string, byte[]>();
-                foreach (var f in payload.files)
-                {
-                    var data = Read(Under(root, f.path));
-                    originals.Add(f.path, data);
-                    outputs.Add(f.path, Transform(data, f));
-                }
-                long needed = originals.Values.Sum(b => (long)b.Length) * 3 + outputs.Values.Sum(b => (long)b.Length) * 2 + 10485760;
+                var plan = Prepare();
+                var receipt = new Receipt { state = "prepared", version = payload.version,
+                    backupDirectory = payload.schema == 2 ? "snapshots/" + Guid.NewGuid().ToString("N") : null,
+                    files = plan.files.Select(f => f.record).ToArray() };
+                string backupRoot = BackupRoot(receipt);
+                long needed = plan.files.Sum(f => (long)f.original.Length * 3 + (long)f.output.Length * 2) + 10485760;
                 if (new DriveInfo(Path.GetPathRoot(root)).AvailableFreeSpace < needed)
                     throw new IOException("Yedekleme için yeterli boş alan yok.");
-                foreach (var f in payload.files)
+                foreach (var f in plan.files)
                 {
-                    string backupFile = Under(Backup, f.path);
+                    string backupFile = Under(backupRoot, f.record.path);
                     Directory.CreateDirectory(Path.GetDirectoryName(backupFile));
-                    if (!File.Exists(backupFile)) AtomicWrite(backupFile, originals[f.path]);
-                    if (Hash(Read(backupFile)) != f.before) throw new IOException("Yedek doğrulanamadı.");
+                    if (!File.Exists(backupFile)) AtomicWrite(backupFile, f.original);
+                    if (Hash(Read(backupFile)) != f.record.before) throw new IOException("Yedek doğrulanamadı.");
                 }
                 byte[] uninstaller = Read(Assembly.GetExecutingAssembly().Location);
-                var receipt = new Receipt { state = "prepared", version = payload.version, uninstallerSha256 = Hash(uninstaller),
-                    files = payload.files.Select(f => new PatchFile { path = f.path, before = f.before, after = f.after }).ToArray() };
+                receipt.uninstallerSha256 = Hash(uninstaller);
                 SaveReceipt(receipt);
                 try
                 {
                     AtomicWrite(uninstallPath, uninstaller);
                     int count = 0;
-                    foreach (var f in payload.files)
+                    foreach (var f in plan.files)
                     {
-                        string target = Under(root, f.path);
-                        if (Hash(Read(target)) != f.before) throw new IOException("Dosya işlem sırasında değişti: " + f.path);
-                        AtomicWrite(target, outputs[f.path]);
-                        if (Hash(Read(target)) != f.after) throw new IOException("Yazılan dosya doğrulanamadı.");
+                        string target = Under(root, f.record.path);
+                        if (Hash(Read(target)) != f.record.before) throw new IOException("Dosya işlem sırasında değişti: " + f.record.path);
+                        AtomicWrite(target, f.output);
+                        if (Hash(Read(target)) != f.record.after) throw new IOException("Yazılan dosya doğrulanamadı.");
                         if (afterWrite != null) afterWrite(++count);
                     }
                     receipt.state = "installed";
@@ -247,7 +301,7 @@ namespace HadesTurkce
                 string current = Hash(Read(Under(root, f.path)));
                 if (current != f.before && current != f.after)
                     throw new IOException("Dosya başka bir uygulama tarafından değiştirilmiş; üzerine yazılmadı: " + f.path);
-                byte[] original = Read(Under(Backup, f.path));
+                byte[] original = Read(Under(BackupRoot(receipt), f.path));
                 if (Hash(original) != f.before) throw new IOException("Yedek bütünlüğü doğrulanamadı: " + f.path);
                 backups.Add(f.path, original);
             }

@@ -1,6 +1,6 @@
 ﻿param(
     [string]$Payload = "calisma/build/payload.json",
-    [string]$Output = "dist/Hades-Turkce-Yama-1.0.0.exe",
+    [string]$Output = "dist/Hades-Turkce-Yama-1.0.1.exe",
     [switch]$LocalArtwork
 )
 $ErrorActionPreference = 'Stop'
@@ -16,7 +16,7 @@ $arguments = @('/nologo', '/target:winexe', '/platform:anycpu', '/optimize+', '/
     '/reference:System.Windows.Forms.dll', '/reference:System.Drawing.dll', '/reference:System.Web.Extensions.dll',
     ('/win32manifest:' + (Join-Path $project 'installer/app.manifest')),
     ('/resource:' + $payloadPath + ',payload.json'), ('/out:' + $outputPath),
-    (Join-Path $project 'installer/Engine.cs'), (Join-Path $project 'installer/Discovery.cs'), (Join-Path $project 'installer/Cleanup.cs'), (Join-Path $project 'installer/InstallerForm.cs'), (Join-Path $project 'installer/Program.cs'))
+    (Join-Path $project 'installer/Engine.cs'), (Join-Path $project 'installer/TextCatalog.cs'), (Join-Path $project 'installer/Discovery.cs'), (Join-Path $project 'installer/Cleanup.cs'), (Join-Path $project 'installer/InstallerForm.cs'), (Join-Path $project 'installer/Program.cs'))
 if ($LocalArtwork) {
     foreach ($slide in 1..4) {
         $artPath = Join-Path $project ('calisma/assets/slide' + $slide + '.jpg')

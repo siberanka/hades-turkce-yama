@@ -39,6 +39,7 @@ def build(catalog, manifest, rows, version, preview=False, reviews=None, font_co
             result.extend(replacement)
             cursor = end
             edits.append({'offset': start, 'length': end - start,
+                          'entry': entry['id'], 'source_sha256': entry['source_sha256'],
                           'replacement': base64.b64encode(replacement).decode('ascii')})
         result.extend(data[cursor:])
         files.append({'path': path, 'before': digest(data), 'after': digest(result), 'edits': edits})
@@ -49,7 +50,7 @@ def build(catalog, manifest, rows, version, preview=False, reviews=None, font_co
         if digest(original) != font_compatibility['sha256']:
             raise ValueError('Font-map cache changed')
         files.append(compatibility_patch(original))
-    return {'schema': 1, 'version': version, 'preview': preview,
+    return {'schema': 2, 'version': version, 'preview': preview,
             'translated': report['translated'], 'total': report['total'], 'files': files,
             'requirements': font_compatibility['fonts'] if font_compatibility else []}
 

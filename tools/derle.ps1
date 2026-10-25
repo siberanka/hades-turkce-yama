@@ -1,7 +1,7 @@
 ﻿param(
     [Parameter(Mandatory = $true)]
     [string]$OyunKlasoru,
-    [string]$Surum = "1.0.0"
+    [string]$Surum = "1.0.1"
 )
 $ErrorActionPreference = 'Stop'
 $project = Split-Path -Parent $PSScriptRoot

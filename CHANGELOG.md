@@ -1,5 +1,12 @@
 # Değişiklikler
 
+## 1.0.1 — 25 Ekim 2026
+
+- Farklı oyun sürümlerinde kimlik ve özgün metin özetiyle eşleşen çeviriler uygulanır; yeni, değişmiş veya belirsiz kayıtlar korunur. SJSON, CSV ve Lua desteklenir.
+- Her kurulum kendi oyun sürümünü ayrı yedekler; eski yedekler üzerine yazılmaz. Kaldırma ve yarıda kesilen kurulumdan geri dönüş bu yedeği kullanır.
+- Uyumluluk sonucunda eşleşen ve atlanan kayıtlar gösterilir. Uyumlu olmayan font eşlemesi metin kurulumunu engellemeden korunur.
+- Kısmi eşleşme, tekrar eden kimlikler, biçim farkları ve farklı sürüm yedekleri için testler eklendi. Gerçek Steam kurulumu ve oyun içi son kontrol kullanıcı tarafından yapılmalıdır.
+
 ## 1.0.0 — 24 Ekim 2026
 
 - 25.629 metin kaydının tamamı Türkçeye çevrildi: arayüz, yardım metinleri, Kodeks, bütün karakter diyalogları, saha ve konak sesleri, anlatıcı ve şarkı altyazıları.

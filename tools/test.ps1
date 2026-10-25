@@ -9,7 +9,7 @@ try {
     New-Item -ItemType Directory -Force -Path (Split-Path -Parent $testRoot) | Out-Null
     $testExe = Join-Path $work 'tests/InstallerTests.exe'
     $compiler = Join-Path $env:WINDIR 'Microsoft.NET/Framework/v4.0.30319/csc.exe'
-    & $compiler /nologo /utf8output /target:exe /reference:System.Web.Extensions.dll ('/out:' + $testExe) (Join-Path $project 'installer/Engine.cs') (Join-Path $project 'installer/Discovery.cs') (Join-Path $project 'tests/InstallerTests.cs')
+    & $compiler /nologo /utf8output /target:exe /reference:System.Web.Extensions.dll ('/out:' + $testExe) (Join-Path $project 'installer/Engine.cs') (Join-Path $project 'installer/TextCatalog.cs') (Join-Path $project 'installer/Discovery.cs') (Join-Path $project 'tests/InstallerTests.cs')
     if ($LASTEXITCODE -ne 0) { throw 'Test derlemesi başarısız.' }
     & $testExe $testRoot
     if ($LASTEXITCODE -ne 0) { throw 'Kurulum testleri başarısız.' }

@@ -16,6 +16,7 @@ def main():
     args = p.parse_args()
     payload = json.loads(args.payload.read_text(encoding='utf-8'))
     translations = {r['key']: r['target'] for r in load_rows(args.drafts)}
+    catalog = {entry['key']: entry for entry in json.loads((WORK / 'cache/catalog.json').read_text(encoding='utf-8'))}
     count = 0
     for f in payload['files']:
         original = (WORK / 'cache/originals' / f['path']).read_bytes()
@@ -24,6 +25,12 @@ def main():
         cursor = 0
         result = bytearray()
         for edit in f['edits']:
+            if payload['schema'] == 2 and f['path'] != FONT_PATH:
+                key = f['path'] + '::' + edit.get('entry', '')
+                entry = catalog.get(key)
+                if (entry is None or key not in translations or entry['source_sha256'] != edit.get('source_sha256')
+                        or entry['start'] != edit['offset'] or entry['end'] - entry['start'] != edit['length']):
+                    raise ValueError('Invalid compatibility locator: ' + key)
             if not cursor <= edit['offset'] or edit['length'] <= 0:
                 raise ValueError('Invalid edit order')
             result.extend(original[cursor:edit['offset']])

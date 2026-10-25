@@ -15,7 +15,7 @@ Araçlar Windows'ta Python 3.14 ve .NET Framework 4.x C# derleyicisiyle doğrula
 ./tools/derle.ps1 -OyunKlasoru 'C:\Program Files (x86)\Steam\steamapps\common\Hades'
 ```
 
-Betik sırasıyla oyun metinlerinin envanterini çıkarır, Türkçe karakter font eşlemesini hazırlar, `ceviri/` kayıtlarını doğrular, yama paketini üretip yeniden doğrular ve kurulum aracını `dist/Hades-Turkce-Yama-1.0.0.exe` olarak derler. Yanına `.sha256` özet dosyası yazılır. Oyun klasörü yalnızca okunur; derleme sırasında oyuna hiçbir şey kurulmaz.
+Betik sırasıyla oyun metinlerinin envanterini çıkarır, Türkçe karakter font eşlemesini hazırlar, `ceviri/` kayıtlarını doğrular, yama paketini üretip yeniden doğrular ve kurulum aracını `dist/Hades-Turkce-Yama-1.0.1.exe` olarak derler. Yanına `.sha256` özet dosyası yazılır. Oyun klasörü yalnızca okunur; derleme sırasında oyuna hiçbir şey kurulmaz.
 
 Aynı oyun sürümü ve aynı `ceviri/` kayıtlarıyla üretilen yama paketi bayt düzeyinde aynıdır; derlenen EXE’nin özeti derleyici zaman damgası nedeniyle farklı olabilir.
 
@@ -25,7 +25,7 @@ Aynı oyun sürümü ve aynı `ceviri/` kayıtlarıyla üretilen yama paketi bay
 py -3 tools/catalog.py 'OYUN_KLASORU'
 py -3 tools/font_patch.py 'OYUN_KLASORU'
 py -3 tools/validate.py
-py -3 tools/package.py --version 1.0.0
+py -3 tools/package.py --version 1.0.1
 py -3 tools/verify_payload.py
 ./tools/build.ps1
 ```
@@ -56,6 +56,10 @@ Envanter, oyun dosyalarının yerel kopyaları, raporlar ve paket depo kökünde
 ```
 
 Python birim testleri ile kurulum aracının yedekleme, geri yükleme, kesinti sonrası kurtarma ve oyun bulma testlerini çalıştırır.
+
+Paket şeması 2, her metin değişikliği için tam kimliği ve özgün metnin SHA-256 özetini içerir; özgün İngilizce metni içermez. Dosya özeti aynıysa doğrulanmış konumlar kullanılır. Farklıysa kurucu SJSON/CSV/Lua metin alanlarını yeniden bulur, kimlik ve içerik özetini birlikte eşleştirir. Tekrarlı kimliklerin sayısı veya çevirileri belirsizse o grup korunur. Çıktı yeniden ayrıştırılarak kimliklerin ve dokunulmayan alanların aynı kaldığı denetlenir. Üç tırnaklı SJSON ham metin blokları değiştirilmez; Lua çalıştırılmaz. Font eşlemesi için metin eşleştirme yöntemi kullanılmaz.
+
+Her yeni kurulumun kaydı, kurulu oyun sürümünün gerçek önce/sonra özetlerini ve kendi yedek dizinini tutar. Eski şema 1 paketleri ve eski yedeklerden kaldırma desteklenir. Envanter ve derleme doğrulaması kaynak değişikliklerini ayrıca reddeder; kurulumdaki kısmi uyumluluk, değişmiş İngilizceyi eski Türkçe çeviriyle zorla eşleştirme izni değildir.
 
 ## Yardımcı araçlar
 
