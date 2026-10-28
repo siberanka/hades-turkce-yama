@@ -13,4 +13,9 @@ try {
     if ($LASTEXITCODE -ne 0) { throw 'Test derlemesi başarısız.' }
     & $testExe $testRoot
     if ($LASTEXITCODE -ne 0) { throw 'Kurulum testleri başarısız.' }
+    $uiExe = Join-Path $work 'tests/InstallerUiTests.exe'
+    & $compiler /nologo /utf8output /target:exe /reference:System.Web.Extensions.dll /reference:System.Windows.Forms.dll /reference:System.Drawing.dll ('/out:' + $uiExe) (Join-Path $project 'installer/Engine.cs') (Join-Path $project 'installer/TextCatalog.cs') (Join-Path $project 'installer/Discovery.cs') (Join-Path $project 'installer/Artwork.cs') (Join-Path $project 'installer/InstallerForm.cs') (Join-Path $project 'tests/InstallerUiTests.cs')
+    if ($LASTEXITCODE -ne 0) { throw 'Arayüz testleri derlenemedi.' }
+    & $uiExe
+    if ($LASTEXITCODE -ne 0) { throw 'Arayüz testleri başarısız.' }
 } finally { Pop-Location }

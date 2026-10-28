@@ -1,5 +1,14 @@
 # Değişiklikler
 
+## 1.0.2 — 28 Ekim 2026
+
+- SJSON ile Lua ayrı kodlanır. Sütun komutları (`Column 215/380/530`) ve seçim köşeli parantezleri gereksiz kaçış karakterleri olmadan korunur; görünmeyen yardım seçeneklerinin paketleme nedeni giderilir.
+- Üç tırnaklı metinler doğru okunur. Lütuf başlıkları, 210 Chaos birleşimi, tanrı hoşnutsuzluk bildirimleri, ilişki açıklamaları ve kayıt/bulut uyarılarıyla 479 kayıt eklendi; kapsam 26.108 kayda çıktı. Oyun künyesi ve telif bildirimleri korunur.
+- Sisyphus ve Patroclus yardım başlıkları kısaltıldı. Arayüzde biçim sınırlarında sözcüklerin bitişmesine karşı boşluk yerleşimi düzeltildi. İki Chaos durum adı, düşmana yeni bir etki eklemeyecek şekilde düzeltildi; birleşik başlıkları eşlendi.
+- Özgün piksel sanatlı simge ve üç sahneli slayt eklendi. Dar pencerede görsel panel gizlenir; küçük ekranlarda işlemler kaydırılarak erişilebilir kalır.
+- `music.mp3` varsa yerel derlemeye eklenir; yoksa ses kaynağı gömülmez. GitHub kaynağı ve yayın EXE’si müziksizdir. Yerel müzik susturulabilir ve geçici dosyası kapanışta temizlenir.
+- Steam/Epic dosya kopyaları ve eski/değişmiş kaynaklar için kurulum, doğrulanmış yedek, geri yükleme ve kaldırma kontrolleri genişletildi. Kurulu oyunlar değiştirilmeden sınandı; gerçek oyun içi görünüm kontrolü ayrı tutulur.
+
 ## 1.0.1 — 25 Ekim 2026
 
 - Farklı oyun sürümlerinde kimlik ve özgün metin özetiyle eşleşen çeviriler uygulanır; yeni, değişmiş veya belirsiz kayıtlar korunur. SJSON, CSV ve Lua desteklenir.

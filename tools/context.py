@@ -10,7 +10,7 @@ import json
 from pathlib import Path
 import re
 
-from catalog import TOKEN, WORK, decode_sjson, digest, write_json
+from catalog import LUA_TOKEN as TOKEN, WORK, decode_lua as decode_sjson, digest, write_json
 
 
 def objects(text):

@@ -1,7 +1,8 @@
 ﻿param(
     [Parameter(Mandatory = $true)]
     [string]$OyunKlasoru,
-    [string]$Surum = "1.0.1"
+    [string]$Surum = "1.0.2",
+    [switch]$Yayin
 )
 $ErrorActionPreference = 'Stop'
 $project = Split-Path -Parent $PSScriptRoot
@@ -22,5 +23,6 @@ try {
     Invoke-Adim 'Yama paketi' @('tools/package.py', '--version', $Surum)
     Invoke-Adim 'Paket doğrulaması' @('tools/verify_payload.py')
     Write-Output '==> Kurulum aracı derlemesi'
-    & (Join-Path $PSScriptRoot 'build.ps1') -Output ('dist/Hades-Turkce-Yama-' + $Surum + '.exe')
+    $target = if ($Yayin) { 'yayin' } else { 'yerel' }
+    & (Join-Path $PSScriptRoot 'build.ps1') -Output ('dist/' + $target + '/Hades-Turkce-Yama-' + $Surum + '.exe') -Release:$Yayin
 } finally { Pop-Location }

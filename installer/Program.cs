@@ -10,7 +10,7 @@ using System.Windows.Forms;
 [assembly: AssemblyCompany("siberanka")]
 [assembly: AssemblyProduct("Hades Türkçe Yama")]
 [assembly: AssemblyCopyright("Copyright © 2026 siberanka")]
-[assembly: AssemblyVersion("1.0.1.0")]
+[assembly: AssemblyVersion("1.0.2.0")]
 
 namespace HadesTurkce
 {

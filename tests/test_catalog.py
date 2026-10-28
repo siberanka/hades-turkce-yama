@@ -5,7 +5,7 @@ import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools'))
-from catalog import csv_strings, sjson_strings, encode, digest
+from catalog import csv_strings, sjson_strings, encode, digest, entry_scope
 from validate import validate
 
 
@@ -46,6 +46,25 @@ class CatalogTests(unittest.TestCase):
     def test_duplicate_ids_get_distinct_occurrences(self):
         result = list(sjson_strings('{ Id="x" DisplayName="one" } { Id="x" DisplayName="two" }'))
         self.assertEqual([r[0] for r in result], ['x::DisplayName::1', 'x::DisplayName::2'])
+
+    def test_sjson_wire_directives_are_not_json_escaped(self):
+        target = r'{#ChoiceFormat}\[ Hasar: \Column 380 {$Value} \]'
+        self.assertEqual(encode(target, 'sjson'), ('"' + target + '"').encode())
+        self.assertNotIn(b'\\\\Column', encode(target, 'sjson'))
+        self.assertEqual(encode('Bir "söz"', 'sjson'), '"""Bir "söz""""'.encode())
+
+    def test_raw_credits_do_not_hide_following_entries(self):
+        text = '{ Id="credits" DisplayName="""A "quoted" credit"""" } { Id="next" DisplayName="Save" }'
+        rows = list(sjson_strings(text))
+        self.assertEqual([(r[0], r[3]) for r in rows],
+                         [('credits::DisplayName::1', 'A "quoted" credit"'), ('next::DisplayName::1', 'Save')])
+
+    def test_generated_visible_titles_are_translated_and_credits_are_protected(self):
+        self.assertEqual(entry_scope('MacroText.sjson', 'UpgradeChoiceMenu_Title_ZeusUpgrade::DisplayName::1', 'Boons of Zeus'), 'game')
+        self.assertEqual(entry_scope('HelpText.en.sjson', 'AboutScreen_Credits::Description::1', 'Original credits'), 'protected')
+        self.assertEqual(entry_scope('HelpText.en.sjson', 'InGameCredits_Developer::DisplayName::1', 'A developer'), 'protected')
+        self.assertEqual(entry_scope('HelpText.en.sjson', 'MainMenuScreen_PatchNotes_0056::Description::1', 'Old patch notes'), 'historical')
+        self.assertEqual(entry_scope('HelpText.en.sjson', 'CreditsButton::DisplayName::1', 'Credits'), 'game')
 
     def test_validation_rejects_stale_source_and_missing_markers(self):
         entry = {'key': 'x', 'source': 'Hello {$Value}', 'source_sha256': digest(b'Hello {$Value}'), 'scope': 'game'}

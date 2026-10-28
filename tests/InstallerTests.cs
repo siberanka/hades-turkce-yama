@@ -14,6 +14,12 @@ static class InstallerTests
     static void Refuses(Action action, string name)
     { bool rejected = false; try { action(); } catch (IOException) { rejected = true; } Assert(rejected, name); }
     static byte[] Bytes(string s) { return Encoding.UTF8.GetBytes(s); }
+    static string Sjson(string value)
+    {
+        string body = value.Replace("\r", @"\r").Replace("\n", @"\n").Replace("\t", @"\t");
+        string quote = body.Contains("\"") ? "\"\"\"" : "\"";
+        return quote + body + quote;
+    }
     static string SourcePath(string root, string rel) { return Path.Combine(root, rel.Replace('/', Path.DirectorySeparatorChar)); }
     static void Write(string path, string text) { Directory.CreateDirectory(Path.GetDirectoryName(path)); File.WriteAllText(path, text, new UTF8Encoding(false)); }
     static Payload Fixture(string root)
@@ -36,7 +42,7 @@ static class InstallerTests
             int occurrence; counts.TryGetValue(entry.id, out occurrence); counts[entry.id] = ++occurrence;
             string target = "Türkçe: " + entry.value;
             string encoded = path.EndsWith(".csv") ? "\"" + target.Replace("\"", "\"\"") + "\"" :
-                new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(target);
+                path.EndsWith(".lua") ? new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(target) : Sjson(target);
             return new Edit { offset = entry.start, length = entry.length, entry = entry.id + "::" + occurrence,
                 source_sha256 = Engine.Hash(Bytes(entry.value)), replacement = Convert.ToBase64String(Bytes(encoded)) };
         }).ToArray();
@@ -70,6 +76,15 @@ static class InstallerTests
         string raw = "{Id=\"credits\" Description=\"\"\"Raw \"credits\" {Id=\"a\" DisplayName=\"Hello\"}\nKeep original\"\"\"}";
         var rawResult = TextCatalog.Rebase(Bytes(raw + current), file);
         Assert(rawResult.applied == 1 && Encoding.UTF8.GetString(rawResult.data).StartsWith(raw), "SJSON triple-quoted raw blocks are preserved and do not hide following IDs");
+        string directives = "{Id=\"choice\" DisplayName=" + Sjson(@"\[ Damage: \Column 380 {$Value} \]") + "}";
+        var directiveFile = TextFile(path, directives);
+        var directiveResult = TextCatalog.Rebase(Bytes("// version shift\n" + directives), directiveFile);
+        string directiveWire = Encoding.UTF8.GetString(directiveResult.data);
+        Assert(directiveResult.applied == 1 && directiveWire.Contains(@"\Column 380") && !directiveWire.Contains(@"\\Column") &&
+            directiveWire.Contains(@"\[") && !directiveWire.Contains(@"\\["), "SJSON choice brackets and column directives retain exactly one backslash on disk");
+        string quotes = "{Id=\"quote\" Description=" + Sjson("Bir \"söz\"") + "}";
+        var quoteResult = TextCatalog.Rebase(Bytes("// shifted\n" + quotes), TextFile(path, quotes));
+        Assert(quoteResult.applied == 1 && TextCatalog.Read(quoteResult.data, path)[0].value == "Türkçe: Bir \"söz\"", "translated raw blocks preserve embedded and final quotes");
         Assert(TextCatalog.Rebase(Bytes(current.Replace("Id=\"a\" DisplayName=\"Hello\"}", "Id=\"other\" DisplayName=\"Hello\"}")), file).applied == 0, "identical English under a different ID never receives a translation");
 
         var duplicate = TextFile(path, "{Id=\"x\" DisplayName=\"Same\"}{Id=\"x\" DisplayName=\"Same\"}");

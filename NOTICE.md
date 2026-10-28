@@ -24,8 +24,8 @@ Bu bildirim amaç ve üretim süreci hakkında şeffaflık sağlar; hak sahibi a
 
 ## Üçüncü taraf bileşenler
 
-Araçlar Python standart kütüphanesini ve Windows .NET Framework bileşenlerini kullanır; bu çalışma ortamları kurulum aracının içine eklenmez. Font dosyaları dağıtılmaz; Türkçe karakter desteği oyunun kendi fontlarına yönlendirmeyle sağlanır. Hades müziği kurulum aracına gömülmez; kullanıcı isterse kendi yerel ses dosyasını seçebilir.
+Araçlar Python standart kütüphanesini ve Windows .NET Framework bileşenlerini kullanır; bu çalışma ortamları kurulum aracının içine eklenmez. Font dosyaları dağıtılmaz; Türkçe karakter desteği oyunun kendi fontlarına yönlendirmeyle sağlanır. GitHub’da yayımlanan EXE müzik içermez; kullanıcı isterse kendi yerel ses dosyasını seçebilir.
 
-Kurulum aracının yalnızca yerelde kullanılan görselli derlemesi resmî ekran görüntüleri içerebilir; böyle bir derleme yalnızca yerel kullanım içindir ve yayımlanmaz. Normal derleme özgün geometrik tasarım kullanır.
+Yalnız yerel kullanım için derlenen EXE, kullanıcının `music.mp3` dosyasını veya isteğe bağlı resmî ekran görüntülerini içerebilir. Bu varlıklar ve bunları içeren EXE’ler GitHub kaynağına veya sürüm varlıklarına yüklenmez; ilgili haklar sahiplerinde kalır. Yayın simgesi ve üç sahneli slayt özgün kod çizimleridir; resmî Hades logosu veya oyun görseli değildir.
 
 Proje, Supergiant Games ile bağlantılı değildir ve resmî destek iddiası taşımaz.

@@ -14,6 +14,8 @@ Kurulum orijinal dosyaları oyun klasöründeki `.hades-tr-backup` dizininde sak
 
 Font eşleme dosyası da uyumluysa metinlerle birlikte yedeklenir ve geri yüklenir. Oyunun mevcut üç fontu denetlenir; font dosyaları değiştirilmez ve kurulum aracına eklenmez. Fontlar veya eşleme farklıysa eşleme korunur, uyumlu metinlerin kurulumu devam eder ve görünümün oyun içinde kontrol edilmesi gerektiği bildirilir.
 
+Yalnızca bir `.pak` dosyası ekleyerek bu çeviriyi yükleyen doğrulanmış bir yöntem bulunmadığından, yedekli metin yaması kullanılır. Toplulukta kullanılan [ModImporter akışı](https://github.com/SGG-Modding/SGG-Mod-Format) da temel dosyalara değişiklik uygular ve orijinalleri yedekler. Bu kurucu ayrıca mod yükleyici gerektirmez.
+
 ## Kaldırma
 
 Oyun klasöründeki **Hades-Turkce-Yamayi-Kaldir.exe** dosyasını açın veya kurulum aracında **Çeviriyi kaldır** seçeneğini kullanın. Dosyalar doğrulanmış yedekten geri yüklenir. Kaldırma aracı başarılı işlem sonunda kendini siler; orijinal yedekler korunur. Windows çalışan EXE'yi kilitlediği için bu silme işlemi geçici klasörde çalışan kısa ömürlü bir yardımcı süreçle tamamlanır; yardımcı dosya geçici klasörde kalabilir.
@@ -32,4 +34,4 @@ Dosya bulunamazsa veya metin yapısı güvenle çözümlenemezse dosya atlanır.
 
 Yönetici yetkisi otomatik istenmez; klasöre yazma yetkisi yoksa işlem hata verir. Yönlendirilmiş klasör, junction ve symlink yolları kabul edilmez. Araç internete bağlanmaz, oyun başlatmaz, indirme yapmaz ve telemetri göndermez. Kurulum aracı dijital olarak imzalanmamıştır; yayımlanan her sürümün yanında `.sha256` özet dosyası bulunur.
 
-Kurulum aracında müzik varsayılan olarak kapalıdır; kullanıcı kendi MP3/WAV dosyasını seçebilir. Hades müziği ve resmî görseller kurulum aracına eklenmez.
+GitHub’dan indirilen kurulum aracı müzik ve resmî oyun görselleri içermez; simge ve slaytları özgün çizimlerdir. İsterseniz kendi MP3/WAV dosyanızı seçebilirsiniz. Yalnız yerel kullanım için `music.mp3` ile derlenen EXE’de müzik otomatik başlar ve susturulabilir; böyle bir EXE yayımlanmaz.

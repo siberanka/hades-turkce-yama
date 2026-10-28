@@ -21,11 +21,26 @@ namespace HadesTurkce
     public static class TextCatalog
     {
         static readonly UTF8Encoding Utf8 = new UTF8Encoding(false, true);
-        static readonly Regex Tokens = new Regex(
+        static readonly Regex LuaTokens = new Regex(
             "\"\"\".*?\"\"\"|--\\[(=*)\\[.*?\\]\\1\\]|--[^\\r\\n]*|/\\*.*?\\*/|//[^\\r\\n]*|\\[(=*)\\[.*?\\]\\2\\]|\"(?:\\\\.|[^\"\\\\])*\"|'(?:\\\\.|[^'\\\\])*'|[A-Za-z_][\\w.]*|[{}\\[\\]=,:]",
+            RegexOptions.Singleline, TimeSpan.FromSeconds(10));
+        static readonly Regex SjsonTokens = new Regex(
+            "\"\"\".*?\"\"\"(?!\")|/\\*.*?\\*/|//[^\\r\\n]*|\"[^\"]*\"|[A-Za-z_][\\w.]*|[{}\\[\\]=,:]",
             RegexOptions.Singleline, TimeSpan.FromSeconds(10));
         static readonly Regex Ident = new Regex("^[A-Za-z][A-Za-z0-9_]*$");
         sealed class Token { public string value; public int start, length; }
+        static string SjsonQuoted(string value)
+        {
+            bool raw = value.StartsWith("\"\"\"");
+            int edge = raw ? 3 : 1;
+            if (value.Length < edge * 2 || !value.StartsWith("\"") ||
+                (raw ? !value.EndsWith("\"\"\"") : !value.EndsWith("\"")))
+                throw new FormatException("Invalid SJSON string");
+            string body = value.Substring(edge, value.Length - edge * 2);
+            if ((!raw && body.Contains("\"")) || body.Contains("\"\"\""))
+                throw new FormatException("Invalid SJSON delimiter");
+            return Regex.Replace(body, @"\\[nrt]", m => m.Value[1] == 'n' ? "\n" : m.Value[1] == 'r' ? "\r" : "\t");
+        }
         static string Quoted(string value)
         {
             if (value.Length < 2 || (value[0] != '"' && value[0] != '\'') || value[value.Length - 1] != value[0])
@@ -62,7 +77,7 @@ namespace HadesTurkce
         }
         static List<TextEntry> Objects(string text, bool lua)
         {
-            var matches = Tokens.Matches(text).Cast<Match>().ToArray();
+            var matches = (lua ? LuaTokens : SjsonTokens).Matches(text).Cast<Match>().ToArray();
             int cursor = 0;
             foreach (var match in matches)
             {
@@ -86,13 +101,13 @@ namespace HadesTurkce
                     if (stack.Count == 0) throw new FormatException("Unbalanced object");
                     var obj = stack.Pop();
                     string idField = lua ? "Cue" : "Id";
-                    if (!obj.ContainsKey(idField) || obj[idField].value.StartsWith("\"\"\"")) continue;
-                    string id = Quoted(obj[idField].value);
+                    if (!obj.ContainsKey(idField)) continue;
+                    string id = lua ? Quoted(obj[idField].value) : SjsonQuoted(obj[idField].value);
                     foreach (string field in lua ? new[] { "Text" } : new[] { "AdditionalDescription", "Description", "DisplayName" })
                     {
                         Token cell;
-                        if (!obj.TryGetValue(field, out cell) || cell.value.StartsWith("\"\"\"")) continue;
-                        entries.Add(new TextEntry { id = id + "::" + field, value = Quoted(cell.value), start = cell.start, length = cell.length });
+                        if (!obj.TryGetValue(field, out cell)) continue;
+                        entries.Add(new TextEntry { id = id + "::" + field, value = lua ? Quoted(cell.value) : SjsonQuoted(cell.value), start = cell.start, length = cell.length });
                     }
                 }
                 else if (stack.Count > 0 && i + 2 < tokens.Length && (tokens[i + 1].value == "=" || tokens[i + 1].value == ":") &&
@@ -201,7 +216,8 @@ namespace HadesTurkce
                 byte[] bytes = Convert.FromBase64String(group.Value[0].replacement);
                 if (bytes.Length > 1024 * 1024) throw new IOException("Metin boyutu beklenen sınırı aşıyor.");
                 string encoded = Utf8.GetString(bytes);
-                string value = file.path.EndsWith(".csv") ? CsvCell(encoded, 0, encoded.Length) : Quoted(encoded);
+                string value = file.path.EndsWith(".csv") ? CsvCell(encoded, 0, encoded.Length) :
+                    file.path.EndsWith(".lua") ? Quoted(encoded) : SjsonQuoted(encoded);
                 foreach (var entry in matching) { replacements.Add(entry.start, bytes); values.Add(entry.start, value); }
             }
             using (var stream = new MemoryStream())

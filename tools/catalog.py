@@ -19,12 +19,19 @@ import shutil
 ROOT = Path(__file__).resolve().parents[1]
 WORK = Path(os.environ.get('HADES_TR_CALISMA') or ROOT / 'calisma')
 TRANSLATIONS = ROOT / 'ceviri'
-TOKEN = re.compile(r'--\[(=*)\[.*?\]\1\]|--[^\r\n]*|/\*.*?\*/|//[^\r\n]*|"(?:\\.|[^"\\])*"|\'(?:\\.|[^\'\\])*\'|[A-Za-z_][\w.]*|[{}\[\]=,:]', re.S)
+LUA_TOKEN = re.compile(r'--\[(=*)\[.*?\]\1\]|--[^\r\n]*|/\*.*?\*/|//[^\r\n]*|\[(=*)\[.*?\]\2\]|"(?:\\.|[^"\\])*"|\'(?:\\.|[^\'\\])*\'|[A-Za-z_][\w.]*|[{}\[\]=,:]', re.S)
+# SJSON backslashes are literal. Raw blocks end at the last three quotes.
+TOKEN = re.compile(r'""".*?"""(?!")|/\*.*?\*/|//[^\r\n]*|"[^"]*"|[A-Za-z_][\w.]*|[{}\[\]=,:]', re.S)
 FIELDS = {'DisplayName', 'Description', 'AdditionalDescription'}
 
 
 def decode_sjson(value: str) -> str:
-    # SJSON permits literal backslashes, e.g. keyboard/platform hints.
+    body = value[3:-3] if value.startswith('"""') else value[1:-1]
+    # Normalize renderer line controls for the editing corpus, not JSON escapes.
+    return re.sub(r'\\[nrt]', lambda m: {'n': '\n', 'r': '\r', 't': '\t'}[m[0][1]], body)
+
+
+def decode_lua(value: str) -> str:
     def escape(match):
         seq = match[0]
         return json.loads('"' + seq + '"') if seq[1] in '"\\/bfnrtu' else seq
@@ -42,7 +49,8 @@ def write_json(path: Path, obj):
 
 def sjson_strings(text: str, lua=False):
     """Return string spans from each identified object; skip comments completely."""
-    tokens = [m for m in TOKEN.finditer(text) if not m[0].startswith(('/*', '//', '--'))]
+    tokenizer, decode = (LUA_TOKEN, decode_lua) if lua else (TOKEN, decode_sjson)
+    tokens = [m for m in tokenizer.finditer(text) if not m[0].startswith(('/*', '//', '--'))]
     stack = []
     occurrences = Counter()
     for i, tok in enumerate(tokens):
@@ -55,13 +63,13 @@ def sjson_strings(text: str, lua=False):
             id_field = 'Cue' if lua else 'Id'
             if id_field not in obj:
                 continue
-            ident = decode_sjson(obj[id_field][0])
+            ident = decode(obj[id_field][0])
             for field in sorted(({'Text'} if lua else FIELDS) & obj.keys()):
                 value = obj[field]
                 key = f'{ident}::{field}'
                 occurrences[key] += 1
                 yield (f'{key}::{occurrences[key]}', value.start(), value.end(),
-                       decode_sjson(value[0]), 'lua' if lua else 'sjson')
+                       decode(value[0]), 'lua' if lua else 'sjson')
         elif stack and i + 2 < len(tokens) and tokens[i + 1][0] in ('=', ':') and tokens[i + 2][0].startswith(('"', "'")):
             stack[-1][tok[0].strip('"')] = tokens[i + 2]
     if stack:
@@ -119,11 +127,26 @@ def csv_strings(text: str):
 
 
 def encode(text: str, kind: str) -> bytes:
-    if kind in ('sjson', 'lua'):
+    if kind == 'sjson':
+        if '"""' in text:
+            raise ValueError('SJSON raw terminator in translation')
+        body = text.replace('\r', r'\r').replace('\n', r'\n').replace('\t', r'\t')
+        quote = '"""' if '"' in body else '"'
+        return (quote + body + quote).encode('utf-8')
+    if kind == 'lua':
         return json.dumps(text, ensure_ascii=False).encode('utf-8')
     buf = io.StringIO(newline='')
     csv.writer(buf, lineterminator='\r\n').writerow([text])
     return buf.getvalue()[:-2].encode('utf-8')
+
+
+def entry_scope(filename: str, key: str, value: str) -> str:
+    if filename.startswith('PatchNotes') or key.startswith('MainMenuScreen_PatchNotes_'):
+        return 'historical'
+    if ('Copyright' in key or key.startswith(('AboutScreen_Credits::', 'InGameCredits_'))
+            or not re.search(r'[A-Za-z]{2}', re.sub(r'\{[^{}]*\}', '', value))):
+        return 'protected'
+    return 'game'
 
 
 def inventory(game: Path):
@@ -152,9 +175,7 @@ def inventory(game: Path):
         for key, start, end, value, kind in spans:
             # Patch history, credits/copyright and formatting-only cells are inventoried
             # separately and never counted as translated story text.
-            scope = 'historical' if src.name.startswith('PatchNotes') else 'game'
-            if 'Copyright' in key or src.name == 'MacroText.sjson' or not re.search(r'[A-Za-z]{2}', re.sub(r'\{[^{}]*\}', '', value)):
-                scope = 'protected'
+            scope = entry_scope(src.name, key, value)
             entries.append({'key': f'{rel}::{key}', 'file': rel, 'id': key,
                             'kind': kind, 'source': value, 'source_sha256': digest(value.encode('utf-8')),
                             'start': offsets[start], 'end': offsets[end], 'scope': scope})

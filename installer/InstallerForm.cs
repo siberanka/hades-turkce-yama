@@ -39,6 +39,7 @@ namespace HadesTurkce
                 using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(name))
                 using (var image = Image.FromStream(stream)) slides.Add(new Bitmap(image));
             }
+            if (slides.Count == 0) for (int i = 0; i < 3; i++) slides.Add(Artwork.Scene(i));
             timer.Tick += delegate
             {
                 if (!Playing || slides.Count < 2) return;
@@ -80,6 +81,8 @@ namespace HadesTurkce
             }
             using (var overlay = new LinearGradientBrush(ClientRectangle, Color.FromArgb(35, 8, 10, 14), Color.FromArgb(245, 12, 14, 18), 90f)) g.FillRectangle(overlay, ClientRectangle);
             using (var shade = new SolidBrush(Color.FromArgb(60, 10, 10, 16))) g.FillRectangle(shade, ClientRectangle);
+            int emblemSize = Math.Min(150, Width / 2);
+            using (var emblem = Artwork.Emblem(emblemSize)) g.DrawImage(emblem, (Width - emblemSize) / 2, Math.Max(90, Height / 4 - emblemSize / 2));
             using (var pen = new Pen(Color.FromArgb(155, Palette.Gold), 1))
             {
                 g.DrawRectangle(pen, 18, 18, Math.Max(1, Width - 37), Math.Max(1, Height - 37));
@@ -117,12 +120,30 @@ namespace HadesTurkce
         [DllImport("winmm.dll", CharSet = CharSet.Unicode)] static extern int mciSendString(string command, StringBuilder result, int length, IntPtr callback);
         readonly string alias = "hadestr" + Guid.NewGuid().ToString("N");
         string file;
+        string temporaryDirectory;
+        public bool HasEmbedded { get { return Assembly.GetExecutingAssembly().GetManifestResourceInfo("local.music.mp3") != null; } }
         public bool Playing { get; private set; }
         public void Toggle(IWin32Window owner)
         {
             if (Playing) { mciSendString("pause " + alias, null, 0, IntPtr.Zero); Playing = false; return; }
             if (file == null)
             {
+                if (HasEmbedded)
+                {
+                    temporaryDirectory = Path.Combine(Path.GetTempPath(), "HadesTurkce-" + Guid.NewGuid().ToString("N"));
+                    Directory.CreateDirectory(temporaryDirectory);
+                    string selected = Path.Combine(temporaryDirectory, "music.mp3");
+                    using (var source = Assembly.GetExecutingAssembly().GetManifestResourceStream("local.music.mp3"))
+                    using (var output = File.Create(selected)) source.CopyTo(output);
+                    if (mciSendString("open \"" + selected + "\" alias " + alias, null, 0, IntPtr.Zero) != 0)
+                    {
+                        Dispose();
+                        throw new IOException("Müzik Windows tarafından oynatılamıyor.");
+                    }
+                    file = selected;
+                    mciSendString("setaudio " + alias + " volume to 250", null, 0, IntPtr.Zero);
+                }
+                else
                 using (var dialog = new OpenFileDialog { Title = "Bilgisayarınızdan bir müzik seçin", Filter = "Ses dosyaları (*.mp3;*.wav)|*.mp3;*.wav", CheckFileExists = true })
                 {
                     if (dialog.ShowDialog(owner) != DialogResult.OK) return;
@@ -138,7 +159,18 @@ namespace HadesTurkce
                 throw new IOException("Müzik başlatılamadı.");
             Playing = true;
         }
-        public void Dispose() { mciSendString("close " + alias, null, 0, IntPtr.Zero); }
+        public void Dispose()
+        {
+            mciSendString("close " + alias, null, 0, IntPtr.Zero);
+            Playing = false;
+            file = null;
+            if (temporaryDirectory != null)
+            {
+                try { File.Delete(Path.Combine(temporaryDirectory, "music.mp3")); Directory.Delete(temporaryDirectory); }
+                catch (IOException) { } catch (UnauthorizedAccessException) { }
+                temporaryDirectory = null;
+            }
+        }
     }
 
     sealed class InstallerForm : Form
@@ -166,18 +198,35 @@ namespace HadesTurkce
         {
             payload = patch;
             Text = "Hades Türkçe Yama · siberanka";
+            using (var icon = Assembly.GetExecutingAssembly().GetManifestResourceStream("art.icon"))
+                if (icon != null) Icon = new Icon(icon);
             Font = new Font("Segoe UI", 10);
             BackColor = Palette.Night;
             ForeColor = Palette.Text;
             ClientSize = new Size(1040, 600);
-            MinimumSize = new Size(1000, 638);
+            MinimumSize = new Size(640, 420);
             StartPosition = FormStartPosition.CenterScreen;
+            AutoScaleDimensions = new SizeF(96, 96);
             AutoScaleMode = AutoScaleMode.Dpi;
             var shell = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 2, RowCount = 1, Margin = Padding.Empty };
             shell.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 37)); shell.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 63));
+            shell.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
             var hero = new HeroPanel { Dock = DockStyle.Fill, Margin = Padding.Empty };
             shell.Controls.Add(hero, 0, 0);
-            var main = new TableLayoutPanel { Dock = DockStyle.Fill, Padding = new Padding(30, 36, 30, 20), ColumnCount = 1, RowCount = 11, Margin = Padding.Empty };
+            var viewport = new Panel { Dock = DockStyle.Fill, AutoScroll = true, Margin = Padding.Empty };
+            var main = new TableLayoutPanel { Dock = DockStyle.Top, Height = 600, Padding = new Padding(30, 36, 30, 20), ColumnCount = 1, RowCount = 11, Margin = Padding.Empty };
+            main.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+            Action fitMain = delegate
+            {
+                int requiredHeight = main.Padding.Vertical + Math.Max(60, status.Font.Height * 4);
+                if (status.Parent != null) requiredHeight += status.Parent.Padding.Vertical + status.Parent.Margin.Vertical;
+                foreach (RowStyle row in main.RowStyles)
+                    if (row.SizeType == SizeType.Absolute) requiredHeight += (int)Math.Ceiling(row.Height);
+                int height = Math.Max(viewport.ClientSize.Height, requiredHeight);
+                if (main.Height != height) main.Height = height;
+            };
+            viewport.Resize += delegate { fitMain(); };
+            main.Layout += delegate { fitMain(); };
             int[] heights = { 58, 52, 27, 44, 46, 28, 8, 0, 50, 40, 30 };
             foreach (int height in heights) main.RowStyles.Add(height == 0 ? new RowStyle(SizeType.Percent, 100) : new RowStyle(SizeType.Absolute, height));
             main.Controls.Add(Label("Kurulum", 27, Palette.Text, true), 0, 0);
@@ -199,15 +248,41 @@ namespace HadesTurkce
             AddButton("Uyumluluğu denetle", "check", false, 160); AddButton("Çeviriyi kur", "install", true, 125); AddButton("Çeviriyi kaldır", "restore", false, 145);
             main.Controls.Add(buttons, 0, 8);
             var extras = new FlowLayoutPanel { Dock = DockStyle.Fill, WrapContents = false };
-            var musicButton = Button("♫  Müzik: kapalı"); musicButton.Width = 170; musicButton.Height = 30; musicButton.Font = new Font("Segoe UI", 9);
+            var musicButton = Button(music.HasEmbedded ? "♫  Müzik: kapalı" : "♫  Müzik seç…"); musicButton.Width = 170; musicButton.Height = 30; musicButton.Font = new Font("Segoe UI", 9);
             musicButton.Click += delegate { try { music.Toggle(this); musicButton.Text = music.Playing ? "♫  Müziği sustur" : "♫  Müzik: kapalı"; } catch (Exception e) { status.Text = e.Message; } };
             var slidesButton = Button("Slaytları duraklat"); slidesButton.Width = 150; slidesButton.Height = 30; slidesButton.Font = new Font("Segoe UI", 9);
             slidesButton.Click += delegate { hero.Playing = !hero.Playing; slidesButton.Text = hero.Playing ? "Slaytları duraklat" : "Slaytları sürdür"; };
             extras.Controls.Add(musicButton); if (hero.HasSlideshow) extras.Controls.Add(slidesButton); else slidesButton.Dispose(); main.Controls.Add(extras, 0, 9);
             main.Controls.Add(Label("Resmî olmayan hayran projesi.", 8, Palette.Muted), 0, 10);
-            shell.Controls.Add(main, 1, 0); Controls.Add(shell);
+            viewport.Controls.Add(main); shell.Controls.Add(viewport, 1, 0); Controls.Add(shell);
+            Action adaptLayout = delegate
+            {
+                int required = main.Padding.Horizontal + SystemInformation.VerticalScrollBarWidth + buttons.Margin.Horizontal;
+                foreach (Control button in buttons.Controls) required += button.Width + button.Margin.Horizontal;
+                bool wide = shell.ClientSize.Width * .63f >= required;
+                hero.Visible = wide;
+                shell.ColumnStyles[0].Width = wide ? 37 : 0;
+                shell.ColumnStyles[1].Width = wide ? 63 : 100;
+                fitMain();
+            };
+            shell.Resize += delegate { adaptLayout(); };
             FormClosing += delegate(object sender, FormClosingEventArgs e) { if (busy) e.Cancel = true; };
-            Shown += delegate { Discover(); };
+            Shown += delegate
+            {
+                FitToScreen();
+                adaptLayout();
+                Discover();
+                if (music.HasEmbedded)
+                    try { music.Toggle(this); musicButton.Text = "♫  Müziği sustur"; }
+                    catch (IOException) { musicButton.Text = "♫  Müzik: kapalı"; }
+            };
+        }
+        void FitToScreen()
+        {
+            Rectangle area = Screen.FromControl(this).WorkingArea;
+            if (Width > area.Width || Height > area.Height)
+                Bounds = new Rectangle(area.X + Math.Max(0, (area.Width - Math.Min(Width, area.Width)) / 2),
+                    area.Y + Math.Max(0, (area.Height - Math.Min(Height, area.Height)) / 2), Math.Min(Width, area.Width), Math.Min(Height, area.Height));
         }
         void OnUi(Action action)
         {

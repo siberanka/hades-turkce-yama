@@ -6,6 +6,7 @@
 /backups/
 /dist/
 /build/
+/music.mp3
 *.exe
 *.dll
 *.zip

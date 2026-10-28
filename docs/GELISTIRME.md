@@ -15,7 +15,7 @@ Araçlar Windows'ta Python 3.14 ve .NET Framework 4.x C# derleyicisiyle doğrula
 ./tools/derle.ps1 -OyunKlasoru 'C:\Program Files (x86)\Steam\steamapps\common\Hades'
 ```
 
-Betik sırasıyla oyun metinlerinin envanterini çıkarır, Türkçe karakter font eşlemesini hazırlar, `ceviri/` kayıtlarını doğrular, yama paketini üretip yeniden doğrular ve kurulum aracını `dist/Hades-Turkce-Yama-1.0.1.exe` olarak derler. Yanına `.sha256` özet dosyası yazılır. Oyun klasörü yalnızca okunur; derleme sırasında oyuna hiçbir şey kurulmaz.
+Betik sırasıyla oyun metinlerinin envanterini çıkarır, Türkçe karakter font eşlemesini hazırlar, `ceviri/` kayıtlarını doğrular, yama paketini üretip yeniden doğrular ve kurulum aracını `dist/yerel/Hades-Turkce-Yama-1.0.2.exe` olarak derler. Yanına `.sha256` özet dosyası yazılır. Oyun klasörü yalnızca okunur; derleme sırasında oyuna hiçbir şey kurulmaz.
 
 Aynı oyun sürümü ve aynı `ceviri/` kayıtlarıyla üretilen yama paketi bayt düzeyinde aynıdır; derlenen EXE’nin özeti derleyici zaman damgası nedeniyle farklı olabilir.
 
@@ -25,7 +25,7 @@ Aynı oyun sürümü ve aynı `ceviri/` kayıtlarıyla üretilen yama paketi bay
 py -3 tools/catalog.py 'OYUN_KLASORU'
 py -3 tools/font_patch.py 'OYUN_KLASORU'
 py -3 tools/validate.py
-py -3 tools/package.py --version 1.0.1
+py -3 tools/package.py --version 1.0.2
 py -3 tools/verify_payload.py
 ./tools/build.ps1
 ```
@@ -55,9 +55,9 @@ Envanter, oyun dosyalarının yerel kopyaları, raporlar ve paket depo kökünde
 ./tools/test.ps1
 ```
 
-Python birim testleri ile kurulum aracının yedekleme, geri yükleme, kesinti sonrası kurtarma ve oyun bulma testlerini çalıştırır.
+Python birim testleri ile kurulum aracının yedekleme, geri yükleme, kesinti sonrası kurtarma ve oyun bulma testlerini çalıştırır. Windows Forms testleri küçük/büyük pencereleri, ölçeklenmiş yerleşimi, kaydırılabilen işlemleri ve slayt duraklatma/geçişini de sınar. Ölçek benzetimi farklı bir monitörde gerçek DPI testi yapıldığı anlamına gelmez.
 
-Paket şeması 2, her metin değişikliği için tam kimliği ve özgün metnin SHA-256 özetini içerir; özgün İngilizce metni içermez. Dosya özeti aynıysa doğrulanmış konumlar kullanılır. Farklıysa kurucu SJSON/CSV/Lua metin alanlarını yeniden bulur, kimlik ve içerik özetini birlikte eşleştirir. Tekrarlı kimliklerin sayısı veya çevirileri belirsizse o grup korunur. Çıktı yeniden ayrıştırılarak kimliklerin ve dokunulmayan alanların aynı kaldığı denetlenir. Üç tırnaklı SJSON ham metin blokları değiştirilmez; Lua çalıştırılmaz. Font eşlemesi için metin eşleştirme yöntemi kullanılmaz.
+Paket şeması 2, her metin değişikliği için tam kimliği ve özgün metnin SHA-256 özetini içerir; özgün İngilizce metni içermez. Dosya özeti aynıysa doğrulanmış konumlar kullanılır. Farklıysa kurucu SJSON/CSV/Lua metin alanlarını yeniden bulur, kimlik ve içerik özetini birlikte eşleştirir. Tekrarlı kimliklerin sayısı veya çevirileri belirsizse o grup korunur. Çıktı yeniden ayrıştırılarak kimliklerin ve dokunulmayan alanların aynı kaldığı denetlenir. Üç tırnaklı SJSON metinleri de okunur; oyun künyesi ve telif metinleri çeviri kapsamından korunarak ayrılır. Lua çalıştırılmaz. Font eşlemesi için metin eşleştirme yöntemi kullanılmaz.
 
 Her yeni kurulumun kaydı, kurulu oyun sürümünün gerçek önce/sonra özetlerini ve kendi yedek dizinini tutar. Eski şema 1 paketleri ve eski yedeklerden kaldırma desteklenir. Envanter ve derleme doğrulaması kaynak değişikliklerini ayrıca reddeder; kurulumdaki kısmi uyumluluk, değişmiş İngilizceyi eski Türkçe çeviriyle zorla eşleştirme izni değildir.
 
@@ -76,4 +76,16 @@ git config core.hooksPath .githooks
 
 `py -3 tools/repo_guard.py --staged`, sahnelenmiş içerikte izin verilen dosya yollarını, ikili dosyaları, oyun kaynak metni sızıntısını ve yaygın erişim anahtarı biçimlerini denetler. Bu kontroller bir güvenlik garantisi değildir; değişiklikler ayrıca incelenmelidir.
 
-`tools/build.ps1 -LocalArtwork`, yalnızca yerelde tutulan ekran görüntülerini gömer ve `LOCAL-ONLY` işareti oluşturur. Bu çıktı yayımlanmaz. Normal derleme özgün geometrik tasarım kullanır; resmî görsel veya müzik içermez.
+## Yerel müzik ve yayın derlemesi
+
+Depo kökünde `music.mp3` varsa normal yerel derlemeye gömülür ve arayüz açılınca çalınır; susturulabilir. Dosya yoksa derlemeye ses kaynağı eklenmez. Gömülen müzik geçici dizine açılır, kapanışta temizlenir. MP3 Git tarafından dışlanır; ham dosyayı veya müzikli EXE’yi GitHub’a yüklemeyin.
+
+GitHub için müziği koşulsuz dışlayan ayrı derleme kullanın:
+
+```powershell
+./tools/derle.ps1 -OyunKlasoru 'OYUN_KLASORU' -Yayin
+# Hazır doğrulanmış paketle:
+./tools/build.ps1 -Release -Output 'dist/yayin/Hades-Turkce-Yama-1.0.2.exe'
+```
+
+`-Release`, kökte MP3 olsa da müzik gömmez ve `-LocalArtwork` ile birlikte kullanılamaz. Yerel müzik/görsel içeren çıktının yanında `LOCAL-ONLY` dosyası oluşturulur. `-LocalArtwork` yalnız yereldeki resmî ekran görüntüleri içindir; bu derleme yayımlanmaz. Yayın derlemesinin simgesi ve üç slaytı özgün kod çizimleridir; oyunun varlıklarını içermez.
